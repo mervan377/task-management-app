@@ -36,3 +36,41 @@
     transform: rotate(360deg);
   }
 }
+
+.container {
+  margin: 2rem 3rem;
+}
+
+.container-content {
+  margin: 1rem 0.2;
+}
+
+.table-tasks .ui-table__header {
+  background-color: Azure !important;
+}
+
+.table-tasks {
+  margin-top: 1rem;
+}
+
+.logo {
+  width: auto;
+  height: 35px;
+}
+ 
+.ui-menu__itemwrapper {
+  position: absolute;
+  right: 0;
+}
+
+.ui-menu {
+  padding-left: 3rem !important;
+}
+.ui-menu li {
+  align-self: center;  
+}
+.ui-menu li:last-child{
+  position: absolute;
+  right: 3rem;
+  box-shadow: none;
+}
