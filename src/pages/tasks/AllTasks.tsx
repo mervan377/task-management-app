@@ -1,30 +1,42 @@
 import * as React from 'react';
-import { List, Image } from '@fluentui/react-northstar';
+import { Pill, Status, Table } from '@fluentui/react-northstar';
+import TaskDetailDialog from '../components/TaskDetailDialog';
 
-const items = [
+const header = {
+  key: 'header',
+  className: 'table-header',
+  items: [
+    { content: 'Created by', key: 'name' },
+    { content: 'Created Department by', key: 'credep' },
+    { content: 'Assigned Department', key: 'assigneddep' },
+    { content: 'Title', key: 'title' },
+    { content: 'Task Status', key: 'taskstatus' },
+    { content: 'See Detail', key: 'seedetail' },
+  ],
+};
+
+const rowsPlain = [
   {
-    key: 'robert',
-    media: <Image src="https://fabricweb.azureedge.net/fabric-website/assets/images/avatar/RobertTolbert.jpg" avatar />,
-    header: 'Robert Tolbert',
-    headerMedia: '7:26:56 AM',
-    content: 'Program the sensor to the SAS alarm through the haptic SQL card!',
+    key: 1,
+    items: [
+      { content: 'John Doe', key: '1-0' },
+      { content: 'Sales Department', key: '2-0' },
+      { content: 'Human Resources Management', key: '3-0' },
+      { content: 'Department Employee List', key: '4-0' },
+      {
+        content: <Pill appearance="outline">
+          <Status color="orange" size="medium" state="warning" />
+          {' '} Task Pending
+        </Pill>, key: '5-0'
+      },
+      { content: <TaskDetailDialog />, key: '6-0' },
+    ],
   },
-  {
-    key: 'celeste',
-    media: <Image src="https://fabricweb.azureedge.net/fabric-website/assets/images/avatar/CelesteBurton.jpg" avatar />,
-    header: 'Celeste Burton',
-    headerMedia: '11:30:17 PM',
-    content: 'Use the online FTP application to input the multi-byte application!',
-  },
-  {
-    key: 'cecil',
-    media: <Image src="https://fabricweb.azureedge.net/fabric-website/assets/images/avatar/CecilFolk.jpg" avatar />,
-    header: 'Cecil Folk',
-    headerMedia: '5:22:40 PM',
-    content: 'The GB pixel is down, navigate the virtual interface!',
-  },
+
 ];
 
-const ListExampleNavigable = () => <List navigable items={items} />;
+const AllTasks = () => (
+  <Table variables={{ cellContentOverflow: 'none' }} header={header} rows={rowsPlain} aria-label="Static table" />
+);
 
-export default ListExampleNavigable;
+export default AllTasks;
