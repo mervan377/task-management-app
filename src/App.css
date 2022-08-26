@@ -33,9 +33,13 @@
 }
 
 .ui-menu li:last-child {
-  position: absolute;
-  right: 3rem;
+  position: absolute; 
   box-shadow: none;
+  margin-right: 2rem;
+}
+
+.ui-menu li:last-child:hover {
+  background: none !important;
 }
 
 .create-task-form {
@@ -52,16 +56,20 @@ form:hover {
   border: none !important;
 }
 
-.home_bar {
-  min-width: 250px;
+.home_box_wrapper {
   display: flex;
-  justify-content: space-around;
-  padding: 0.2rem 1.4rem;
-  float: left;
-  box-shadow: 0 0 8px #aab;
+  justify-content: space-evenly;
+  margin-top: 2rem;
 }
 
-.home_bar .extra_info {
+.home_box {
+  min-width: 250px;
+  display: flex;
+  padding: 0.2rem 1.4rem; 
+  box-shadow: 0 0 8px #aab; 
+}
+
+.home_box .extra_info {
   min-width: 250px;
   display: flex;
   align-items: center;
@@ -70,7 +78,7 @@ form:hover {
   margin: 1.2rem 0;
 }
 
-.home_bar .extra_info_icon svg {
+.home_box .extra_info_icon svg {
   height: auto;
   width: 45px;
   margin-right: 2rem;
@@ -95,4 +103,17 @@ form:hover {
 
 .breadcrumb_header .ui-breadcrumb__item:first-child {
   padding-left: 0 !important;
+}
+
+.ui-dropdown__container {
+  background-color: white !important;
+  box-shadow: 0 0 3px #999;
+}
+
+.ui-dropdown__item__header:hover {
+  cursor: pointer;
+}
+
+.ui-button {
+  float: right;
 }

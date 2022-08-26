@@ -1,7 +1,8 @@
-import { Button, CloseIcon, Dialog, Pill, Status, Table, TrashCanIcon } from '@fluentui/react-northstar';
+import { Pill, Status, Table } from '@fluentui/react-northstar';
+import TaskDeleteDialog from './components/TaskDeleteDialog';
 
-import TaskDetailDialog from '../components/TaskDetailDialog';
-import UpdateZoomContent from '../components/Update';
+import TaskDetailDialog from './components/TaskDetailDialog';
+import UpdateZoomContent from './components/TaskUpdateDialog';
 
 
 const header = {
@@ -30,23 +31,17 @@ const rowsPlain = [
       {
         content: <Pill appearance="outline">
           <Status color="orange" size="medium" state="warning" />
-          Task Pending
+          {' '} Pending
         </Pill>, key: '5-0'
       },
       {
-        content: <TaskDetailDialog/>, key: '6-0'
+        content: <TaskDetailDialog />, key: '6-0'
       },
       {
-        content: <UpdateZoomContent />, key: '6-0'
+        content: <UpdateZoomContent />, key: '7-0'
       },
       {
-        content: <Dialog
-          cancelButton="Cancel"
-          confirmButton="Confirm"
-          header="Are you sure?"
-          headerAction={{ icon: <CloseIcon />, title: 'Close' }}
-          trigger={<Button content="Delete Task" icon={<TrashCanIcon />} iconPosition="before" />}
-        />, key: '6-0'
+        content: <TaskDeleteDialog />, key: '8-0'
       },
     ],
   },

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Dropdown, Table } from '@fluentui/react-northstar';
-import TaskDetailDialog from '../components/TaskDetailDialog'
+import TaskDetailDialog from './components/TaskDetailDialog'
 
 
 const inputItems = [
@@ -30,13 +30,13 @@ const rowsPlain = [
       { content: 'Sales Department', key: '2-0' },
       { content: 'Human Resources Management', key: '3-0' },
       { content: 'Department Employee List', key: '4-0' },
-      { content: <TaskDetailDialog />, key: '6-0' },
+      { content: <TaskDetailDialog />, key: '5-0' },
       {
         content: <Dropdown fluid
           items={inputItems}
           placeholder="Select Status"
           checkable
-        />
+        />, key: '6-0'
       },
     ],
   },

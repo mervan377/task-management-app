@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Pill, Status, Table } from '@fluentui/react-northstar';
-import TaskDetailDialog from '../components/TaskDetailDialog';
+import TaskDetailDialog from './components/TaskDetailDialog';
 
 const header = {
   key: 'header',
@@ -26,7 +26,7 @@ const rowsPlain = [
       {
         content: <Pill appearance="outline">
           <Status color="orange" size="medium" state="warning" />
-          {' '} Task Pending
+          {' '} Pending
         </Pill>, key: '5-0'
       },
       { content: <TaskDetailDialog />, key: '6-0' },

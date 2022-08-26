@@ -2,7 +2,10 @@ import React from 'react'
 import { Outlet } from "react-router-dom";
 import Header from '../Header';
 import "../../App.css"
-import { Breadcrumb, ChevronEndIcon } from '@fluentui/react-northstar';
+import CreateTaskDialog from './components/CreateTaskDialog';
+import BreadcrumbTop from '../components/Breadcrumb';
+import { CreateTaskStore } from "./stores/CreateTaskStore"
+
 
 function TasksLayout() {
     return (
@@ -10,21 +13,10 @@ function TasksLayout() {
             <Header />
             <div className='container'>
                 <div className="container-content">
-                    <Breadcrumb aria-label="breadcrumb" className='breadcrumb_header'>
-                        <Breadcrumb.Item>
-                            <Breadcrumb.Link href="">Home</Breadcrumb.Link>
-                        </Breadcrumb.Item>
-                        <Breadcrumb.Divider>
-                            <ChevronEndIcon />
-                        </Breadcrumb.Divider>
-                        <Breadcrumb.Item>
-                            <Breadcrumb.Link href="">Store</Breadcrumb.Link>
-                        </Breadcrumb.Item>
-                        <Breadcrumb.Divider>
-                            <ChevronEndIcon />
-                        </Breadcrumb.Divider>
-                        <Breadcrumb.Item aria-current="page">T-shirt</Breadcrumb.Item>
-                    </Breadcrumb>
+                    <BreadcrumbTop />
+
+                    <CreateTaskDialog createTaskStore={CreateTaskStore} />
+
                     <Outlet />
                 </div>
             </div>
@@ -34,5 +26,4 @@ function TasksLayout() {
 
 export default TasksLayout
 
-// En sağ tarafta logout
-//Sol tarafta Logo
+
