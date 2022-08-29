@@ -1,42 +1,42 @@
 import * as React from 'react';
-import { Pill, Status, Table } from '@fluentui/react-northstar';
+import { Button, ExpandIcon, Table, tableHeaderCellBehavior } from '@fluentui/react-northstar';
+import { TaskStore } from './stores/TaskStore';
 import TaskDetailDialog from './components/TaskDetailDialog';
+import { observer } from 'mobx-react-lite';
 
-const header = {
-  key: 'header',
-  className: 'table-header',
-  items: [
-    { content: 'Created by', key: 'name' },
-    { content: 'Created Department by', key: 'credep' },
-    { content: 'Assigned Department', key: 'assigneddep' },
-    { content: 'Title', key: 'title' },
-    { content: 'Task Status', key: 'taskstatus' },
-    { content: 'See Detail', key: 'seedetail' },
-  ],
-};
 
-const rowsPlain = [
-  {
-    key: 1,
-    items: [
-      { content: 'John Doe', key: '1-0' },
-      { content: 'Sales Department', key: '2-0' },
-      { content: 'Human Resources Management', key: '3-0' },
-      { content: 'Department Employee List', key: '4-0' },
-      {
-        content: <Pill appearance="outline">
-          <Status color="orange" size="medium" state="warning" />
-          {' '} Pending
-        </Pill>, key: '5-0'
-      },
-      { content: <TaskDetailDialog />, key: '6-0' },
-    ],
-  },
 
-];
-
-const AllTasks = () => (
-  <Table variables={{ cellContentOverflow: 'none' }} header={header} rows={rowsPlain} aria-label="Static table" />
-);
-
+const AllTasks: React.FC<any> = observer(() => {
+  const store = React.useMemo(() => new TaskStore(), [])
+  const { allTasks, getStatusAsString, getDepartmentAsString } = store;
+  return (
+    <React.Fragment>
+      <Table aria-label="table">
+        <Table.Row header className='table-header'>
+          <Table.Cell content="Title" accessibility={tableHeaderCellBehavior} />
+          <Table.Cell content="Created By" accessibility={tableHeaderCellBehavior} />
+          <Table.Cell content="Assigned Department" accessibility={tableHeaderCellBehavior} />
+          <Table.Cell content="Status" accessibility={tableHeaderCellBehavior} />
+          <Table.Cell content="See Detail" accessibility={tableHeaderCellBehavior} />
+        </Table.Row>
+        {allTasks.map((task, index) => {
+          return (
+            <Table.Row>
+              <Table.Cell content={task.title} />
+              <Table.Cell content={task.user.name} />
+              <Table.Cell content={getDepartmentAsString(task.assignedDepartment)} />
+              <Table.Cell content={getStatusAsString(task.status)} />
+              <Table.Cell content={<Button content="Detail Task" icon={<ExpandIcon />} iconPosition="after" onClick={() => {
+                store.setSelectedTask(task)
+                store.changeDetailPopupVisibilty(true)
+              }} />} />
+            </Table.Row>
+          )
+        })
+        }
+      </Table>
+      <TaskDetailDialog taskStore={store} />
+    </React.Fragment>
+  )
+})
 export default AllTasks;

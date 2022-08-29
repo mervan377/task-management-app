@@ -9,7 +9,7 @@ import PendingTasks from './pages/tasks/PendingTasks';
 
 import Login from './pages/login/Login';
 
-const App = () => {
+const App: React.FC = () => {
   return (
     <>
       <BrowserRouter>
@@ -27,4 +27,4 @@ const App = () => {
   );
 }
 
-export default App;
+export {App}

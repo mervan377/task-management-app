@@ -1,55 +1,57 @@
-import { Pill, Status, Table } from '@fluentui/react-northstar';
+
+import * as React from 'react';
+import { Button, ExpandIcon, SettingsIcon, Table, tableHeaderCellBehavior } from '@fluentui/react-northstar';
+import { TaskStore } from './stores/TaskStore';
+
 import TaskDeleteDialog from './components/TaskDeleteDialog';
-
 import TaskDetailDialog from './components/TaskDetailDialog';
-import UpdateZoomContent from './components/TaskUpdateDialog';
+import TaskUpdateDialog from './components/TaskUpdateDialog';
+import { observer } from 'mobx-react-lite';
 
+const MyTasks: React.FC<any> = observer(() => {
 
-const header = {
-  key: 'header',
-  className: 'table-header',
-  items: [
-    { content: 'Created by', key: 'name' },
-    { content: 'Created Department by', key: 'credep' },
-    { content: 'Assigned Department', key: 'assigneddep' },
-    { content: 'Title', key: 'title' },
-    { content: 'Task Status', key: 'taskstatus' },
-    { content: 'See Detail', key: 'seedetail' },
-    { content: 'Update Task', key: 'updatetask' },
-    { content: 'Delete Task', key: 'deletetask' },
-  ],
-};
+  const store = React.useMemo(() => new TaskStore(), [])
+  const { myTasks, getStatusAsString, getDepartmentAsString } = store;
 
-const rowsPlain = [
-  {
-    key: 1,
-    items: [
-      { content: 'John Doe', key: '1-0' },
-      { content: 'Sales Department', key: '2-0' },
-      { content: 'Human REsources Management', key: '3-0' },
-      { content: 'Department Employee List', key: '4-0' },
-      {
-        content: <Pill appearance="outline">
-          <Status color="orange" size="medium" state="warning" />
-          {' '} Pending
-        </Pill>, key: '5-0'
-      },
-      {
-        content: <TaskDetailDialog />, key: '6-0'
-      },
-      {
-        content: <UpdateZoomContent />, key: '7-0'
-      },
-      {
-        content: <TaskDeleteDialog />, key: '8-0'
-      },
-    ],
-  },
+  return (
+    <React.Fragment>
+      <Table aria-label="table" >
+        <Table.Row header className='table-header'>
+          <Table.Cell content="Title" accessibility={tableHeaderCellBehavior} />
+          <Table.Cell content="Created By" accessibility={tableHeaderCellBehavior} />
+          <Table.Cell content="Assigned Department" accessibility={tableHeaderCellBehavior} />
+          <Table.Cell content="Status" accessibility={tableHeaderCellBehavior} />
+          <Table.Cell content="See Detail" accessibility={tableHeaderCellBehavior} />
+          <Table.Cell content="Update" accessibility={tableHeaderCellBehavior} />
+          <Table.Cell content="Delete" accessibility={tableHeaderCellBehavior} />
+        </Table.Row>
+        {myTasks.map((task, index) => { 
+          return (
+            <Table.Row>
+              <Table.Cell content={task.title} />
+              <Table.Cell content={task.user.name} />
+              <Table.Cell content={getDepartmentAsString(task.assignedDepartment)} />
+              <Table.Cell content={getStatusAsString(task.status)} />
+              <Table.Cell content={<Button content="Detail Task" icon={<ExpandIcon />} iconPosition="after" onClick={() => {
+                store.setSelectedTask(task)
+                store.changeDetailPopupVisibilty(true)
+              }} />} />
+              <Table.Cell content={<Button content="Update" icon={<SettingsIcon />} iconPosition="after" onClick={() => {
+                store.setSelectedTask(task)
+                store.changeUpdatePopupVisibilty(true)
+                store.changeUpdatePopupEditable(true)
+              }} />} />
+              <Table.Cell content={<TaskDeleteDialog />} />
+            </Table.Row>
+          )
+        })
+        }
+      </Table>
+      <TaskDetailDialog taskStore={store} />
+      <TaskUpdateDialog taskStore={store} />
+    </React.Fragment>
+  )
+})
 
-];
-
-const MyTasks = () => (
-  <Table variables={{ cellContentOverflow: 'none' }} header={header} rows={rowsPlain} aria-label="Static table" />
-);
 
 export default MyTasks;

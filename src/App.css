@@ -42,14 +42,6 @@
   background: none !important;
 }
 
-.create-task-form {
-  width: 50% !important;
-}
-
-form:hover {
-  cursor: pointer;
-}
-
 .table-header {
   background-color: #efefef !important;
   font-weight: bold;

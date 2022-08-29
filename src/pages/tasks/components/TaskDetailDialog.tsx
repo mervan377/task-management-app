@@ -1,19 +1,28 @@
 import * as React from 'react';
-import { Button, Dialog, ExpandIcon } from '@fluentui/react-northstar';
-import TaskForm from './TaskDetailForm';
+import { Dialog } from '@fluentui/react-northstar';
+import TaskForm from './TaskForm';
+import { TaskStore } from '../stores/TaskStore';
+import { observer } from 'mobx-react-lite';
 
+interface ITaskDetailFormProps {
+  taskStore: TaskStore
+}
 
-interface ITaskDetailDialogProps {}
-
-const TaskDetailDialog: React.FC<ITaskDetailDialogProps> = () => (
-  <Dialog
-  cancelButton="Close"
-    content={
-      <TaskForm />
-    }
-    header="See Detail"
-    trigger={< Button content="Detail Task" icon={<ExpandIcon />} iconPosition="after"/>}
-  />
-);
+const TaskDetailDialog: React.FC<ITaskDetailFormProps> = observer(({ taskStore }) => {
+  const { selectedTask, changeDetailPopupVisibilty } = taskStore;
+  return (
+    <Dialog
+      open={taskStore.isDetailFormOpen}
+      cancelButton="Close"
+      onCancel={() => {
+        changeDetailPopupVisibilty(false)
+      }}
+      content={
+        <TaskForm selectedTask={selectedTask!} />
+      }
+      header="See Detail"
+    />
+  )
+});
 
 export default TaskDetailDialog;
