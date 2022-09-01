@@ -1,16 +1,21 @@
 
 import * as React from 'react';
 import { Button, ExpandIcon, SettingsIcon, Table, tableHeaderCellBehavior } from '@fluentui/react-northstar';
-import { TaskStore } from './stores/TaskStore';
 
 import TaskDeleteDialog from './components/TaskDeleteDialog';
 import TaskDetailDialog from './components/TaskDetailDialog';
 import TaskUpdateDialog from './components/TaskUpdateDialog';
+import TaskCreateDialog from './components/TaskCreateDialog';
 import { observer } from 'mobx-react-lite';
+import { ITaskModel } from '../../models/tasks/TaskModel';
+import { store } from './stores/TaskStore';
 
-const MyTasks: React.FC<any> = observer(() => {
+interface ITaskDetailFormProps {
+  selectedTask?: ITaskModel
+}
 
-  const store = React.useMemo(() => new TaskStore(), [])
+const MyTasks: React.FC<ITaskDetailFormProps> = observer(() => {
+ 
   const { myTasks, getStatusAsString, getDepartmentAsString } = store;
 
   return (
@@ -25,7 +30,7 @@ const MyTasks: React.FC<any> = observer(() => {
           <Table.Cell content="Update" accessibility={tableHeaderCellBehavior} />
           <Table.Cell content="Delete" accessibility={tableHeaderCellBehavior} />
         </Table.Row>
-        {myTasks.map((task, index) => { 
+        {myTasks.map((task, index) => {
           return (
             <Table.Row>
               <Table.Cell content={task.title} />
@@ -34,12 +39,11 @@ const MyTasks: React.FC<any> = observer(() => {
               <Table.Cell content={getStatusAsString(task.status)} />
               <Table.Cell content={<Button content="Detail Task" icon={<ExpandIcon />} iconPosition="after" onClick={() => {
                 store.setSelectedTask(task)
-                store.changeDetailPopupVisibilty(true)
+                store.changeDetailPopupVisibility(true)
               }} />} />
               <Table.Cell content={<Button content="Update" icon={<SettingsIcon />} iconPosition="after" onClick={() => {
                 store.setSelectedTask(task)
-                store.changeUpdatePopupVisibilty(true)
-                store.changeUpdatePopupEditable(true)
+                store.changeUpdatePopupVisibility(true)
               }} />} />
               <Table.Cell content={<TaskDeleteDialog />} />
             </Table.Row>
@@ -47,6 +51,8 @@ const MyTasks: React.FC<any> = observer(() => {
         })
         }
       </Table>
+
+      <TaskCreateDialog taskStore={store} />
       <TaskDetailDialog taskStore={store} />
       <TaskUpdateDialog taskStore={store} />
     </React.Fragment>

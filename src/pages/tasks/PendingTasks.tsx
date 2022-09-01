@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Dropdown, Table, tableHeaderCellBehavior } from '@fluentui/react-northstar';
-import { TaskStore } from './stores/TaskStore';
+import { store } from './stores/TaskStore';
 
 import TaskDetailDialog from './components/TaskDetailDialog';
 import { observer } from 'mobx-react-lite';
@@ -13,7 +13,6 @@ const inputItems = [
 
 const PendingTasks: React.FC<any> = observer(() => {
 
-  const store = React.useMemo(() => new TaskStore(), [])
   const { pendingTasks, getDepartmentAsString } = store;
   return (
     <Table aria-label="table">

@@ -1,14 +1,16 @@
 import * as React from 'react';
 import { Button, ExpandIcon, Table, tableHeaderCellBehavior } from '@fluentui/react-northstar';
-import { TaskStore } from './stores/TaskStore';
+import { store } from './stores/TaskStore';
 import TaskDetailDialog from './components/TaskDetailDialog';
 import { observer } from 'mobx-react-lite';
 
+interface ICreateTaskFormProps { 
+}
 
-
-const AllTasks: React.FC<any> = observer(() => {
-  const store = React.useMemo(() => new TaskStore(), [])
+const AllTasks: React.FC<ICreateTaskFormProps> = observer(() => {
+  
   const { allTasks, getStatusAsString, getDepartmentAsString } = store;
+
   return (
     <React.Fragment>
       <Table aria-label="table">
@@ -28,7 +30,7 @@ const AllTasks: React.FC<any> = observer(() => {
               <Table.Cell content={getStatusAsString(task.status)} />
               <Table.Cell content={<Button content="Detail Task" icon={<ExpandIcon />} iconPosition="after" onClick={() => {
                 store.setSelectedTask(task)
-                store.changeDetailPopupVisibilty(true)
+                store.changeDetailPopupVisibility(true)
               }} />} />
             </Table.Row>
           )

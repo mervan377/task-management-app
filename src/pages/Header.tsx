@@ -15,7 +15,7 @@ function Header() {
       <Menu
         items={[
           {
-            content: <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQI1OjKY1KKU5K4Yym9v7bJbBQoJuskcHgx8A&usqp=CAU" className="logo" />,
+            content: <img src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQI1OjKY1KKU5K4Yym9v7bJbBQoJuskcHgx8A&usqp=CAU' className='logo' />,
             href: '/',
             key: 'logo'
           },

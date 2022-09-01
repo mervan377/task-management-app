@@ -5,24 +5,42 @@ import {
   TaskStatus,
 } from "../../../models/tasks/TaskModel";
 
+
 export class TaskStore {
   constructor() {
     makeObservable(this);
   }
-
+  
+  /* Select Current Task */
   @observable
   selectedTask: ITaskModel | undefined;
-
   @action
   setSelectedTask = (task: ITaskModel): void => {
-    this.selectedTask = task;
+    this.selectedTask = {...task};
+  };
+  
+  /* Make Form Empty */
+  @action
+  initializeSelectedTask = (): void => {
+    this.selectedTask = {
+      id: 0,
+      title: "",
+      description: "",
+      user: {
+        id: 0,
+        name: "",
+      },
+      assignedDepartment: Departments.HumanResources,
+      status: TaskStatus.Pending,
+      logs: [],
+    };
   };
 
   /*  Detail Form Open  */
   @observable
   isDetailFormOpen: boolean = false;
   @action
-  changeDetailPopupVisibilty = (isOpen: boolean): void => {
+  changeDetailPopupVisibility = (isOpen: boolean): void => {
     this.isDetailFormOpen = isOpen;
   };
 
@@ -30,28 +48,40 @@ export class TaskStore {
   @observable
   isUpdateFormOpen: boolean = false;
   @action
-  changeUpdatePopupVisibilty = (isOpen: boolean): void => {
+  changeUpdatePopupVisibility = (isOpen: boolean): void => {
     this.isUpdateFormOpen = isOpen;
   };
 
+  /*  Create Form Open  */
   @observable
-  isEditableForm: boolean = false;
+  isCreateFormOpen: boolean = false;
   @action
-  changeUpdatePopupEditable= (isEditable: boolean): void => {
-    this.isEditableForm = isEditable;
+  changeCreatePopupVisibility = (isOpen: boolean): void => {
+    this.isCreateFormOpen = isOpen;
   };
 
+  /* */
+  @action
+  addSelectedTaskToLists = (): void => {
+    this.selectedTask!.user = {
+      name: "John Doe",
+      id: 2002
+    } 
+    this.allTasks.push({...this.selectedTask!})
+    this.myTasks.push({...this.selectedTask!})
+  }
 
-
-
-
-
-
-
-
-
-
-
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
 
   /* ******************************************* */
   @observable
@@ -132,13 +162,16 @@ export class TaskStore {
   getDepartmentAsString = (status: Departments): string => {
     switch (status) {
       case Departments.HumanResources:
-        return "Human Resources";
+        return "Human Resources Deparment";
       case Departments.Sales:
-        return "Sales";
+        return "Sales Deparment";
       case Departments.Marketing:
-        return "Marketing";
+        return "Marketing Deparment";
       default:
         return "Error";
     }
   };
 }
+
+
+export const store = new TaskStore();
