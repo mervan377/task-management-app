@@ -27,7 +27,7 @@ const TasksLayout: React.FC<ICreateTaskFormProps> = observer(() => {
                     }} />
                     <TaskCreateDialog taskStore={store} />
                     <Outlet />
-                </div> 
+                </div>
             </div>
         </div>
     )

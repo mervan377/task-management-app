@@ -1,17 +1,33 @@
 import * as React from 'react';
-import { Button, Dialog, TrashCanIcon } from '@fluentui/react-northstar';
+import { Dialog } from '@fluentui/react-northstar';
 import { observer } from 'mobx-react-lite';
+import TaskForm from './TaskForm';
+import { TaskStore } from '../stores/TaskStore';
 
-const TaskDeleteDialog: React.FC<any> = observer(() => {
+interface ITaskDeleteFormProps {
+    taskStore: TaskStore
+}
+
+const TaskDeleteDialog: React.FC<ITaskDeleteFormProps> = observer(({ taskStore }) => {
+
+    const { selectedTask, changeDeletePopupVisibility } = taskStore;
+
     return (
         <Dialog
-        cancelButton="Cancel"
-        confirmButton="Delete"
-        header="Are you sure?"
-        content= "Do you want to delete the task titled Sales department?"
-        trigger={<Button content="Delete Task" icon={<TrashCanIcon />} iconPosition="after" />}
-    />
+            open={taskStore.isDeleteFormOpen}
+            cancelButton="Cancel"
+            onCancel={() => {
+                changeDeletePopupVisibility(false)
+            }}
+            confirmButton="Delete"
+            content={
+                <TaskForm selectedTask={selectedTask!} isEditableForm={false} />
+            }
+            header="Are you sure?"
+        />
     )
 });
 
+
 export default TaskDeleteDialog;
+

@@ -5,20 +5,19 @@ import {
   TaskStatus,
 } from "../../../models/tasks/TaskModel";
 
-
 export class TaskStore {
   constructor() {
     makeObservable(this);
   }
-  
+
   /* Select Current Task */
   @observable
   selectedTask: ITaskModel | undefined;
   @action
   setSelectedTask = (task: ITaskModel): void => {
-    this.selectedTask = {...task};
+    this.selectedTask = { ...task };
   };
-  
+
   /* Make Form Empty */
   @action
   initializeSelectedTask = (): void => {
@@ -60,16 +59,42 @@ export class TaskStore {
     this.isCreateFormOpen = isOpen;
   };
 
-  /* */
+  /*  Delete Form Open  */
+  @observable
+  isDeleteFormOpen: boolean = false;
+  @action
+  changeDeletePopupVisibility = (isOpen: boolean): void => {
+    this.isDeleteFormOpen = isOpen;
+  };
+
+  /* Add Task to List */
   @action
   addSelectedTaskToLists = (): void => {
     this.selectedTask!.user = {
       name: "John Doe",
-      id: 2002
-    } 
-    this.allTasks.push({...this.selectedTask!})
-    this.myTasks.push({...this.selectedTask!})
-  }
+      id: 2002,
+    };
+    this.allTasks.push({ ...this.selectedTask! });
+    this.myTasks.push({ ...this.selectedTask! });
+  };
+
+  /* Update Task From List */
+  @action
+  updateSelectedTaskFromList = (rak: ITaskModel): void => {
+    this.selectedTask = {
+      id: rak.id,
+      title: rak.title,
+      description: "",
+      user: {
+        id: 0,
+        name: "",
+      },
+      assignedDepartment: Departments.HumanResources,
+      status: TaskStatus.Pending,
+      logs: [],
+    }
+     
+  };
 
   //
   //
@@ -172,6 +197,5 @@ export class TaskStore {
     }
   };
 }
-
 
 export const store = new TaskStore();

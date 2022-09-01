@@ -1,11 +1,10 @@
 
 import * as React from 'react';
-import { Button, ExpandIcon, SettingsIcon, Table, tableHeaderCellBehavior } from '@fluentui/react-northstar';
+import { Button, ExpandIcon, SettingsIcon, Table, tableHeaderCellBehavior, TrashCanIcon } from '@fluentui/react-northstar';
 
 import TaskDeleteDialog from './components/TaskDeleteDialog';
 import TaskDetailDialog from './components/TaskDetailDialog';
 import TaskUpdateDialog from './components/TaskUpdateDialog';
-import TaskCreateDialog from './components/TaskCreateDialog';
 import { observer } from 'mobx-react-lite';
 import { ITaskModel } from '../../models/tasks/TaskModel';
 import { store } from './stores/TaskStore';
@@ -15,7 +14,7 @@ interface ITaskDetailFormProps {
 }
 
 const MyTasks: React.FC<ITaskDetailFormProps> = observer(() => {
- 
+
   const { myTasks, getStatusAsString, getDepartmentAsString } = store;
 
   return (
@@ -45,14 +44,16 @@ const MyTasks: React.FC<ITaskDetailFormProps> = observer(() => {
                 store.setSelectedTask(task)
                 store.changeUpdatePopupVisibility(true)
               }} />} />
-              <Table.Cell content={<TaskDeleteDialog />} />
+              <Table.Cell content={<Button content="Delete Task" icon={<TrashCanIcon />} iconPosition="after" />} onClick={() => {
+                store.setSelectedTask(task)
+                store.changeDeletePopupVisibility(true)
+              }} />
             </Table.Row>
           )
         })
         }
       </Table>
-
-      <TaskCreateDialog taskStore={store} />
+      <TaskDeleteDialog taskStore={store} />
       <TaskDetailDialog taskStore={store} />
       <TaskUpdateDialog taskStore={store} />
     </React.Fragment>

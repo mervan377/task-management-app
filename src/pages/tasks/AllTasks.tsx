@@ -4,11 +4,11 @@ import { store } from './stores/TaskStore';
 import TaskDetailDialog from './components/TaskDetailDialog';
 import { observer } from 'mobx-react-lite';
 
-interface ICreateTaskFormProps { 
+interface ICreateTaskFormProps {
 }
 
 const AllTasks: React.FC<ICreateTaskFormProps> = observer(() => {
-  
+
   const { allTasks, getStatusAsString, getDepartmentAsString } = store;
 
   return (
@@ -23,7 +23,7 @@ const AllTasks: React.FC<ICreateTaskFormProps> = observer(() => {
         </Table.Row>
         {allTasks.map((task, index) => {
           return (
-            <Table.Row>
+            <Table.Row key={index}>
               <Table.Cell content={task.title} />
               <Table.Cell content={task.user.name} />
               <Table.Cell content={getDepartmentAsString(task.assignedDepartment)} />

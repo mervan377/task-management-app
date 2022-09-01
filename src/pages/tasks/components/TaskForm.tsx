@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Flex, Form, Input, FormField, FormLabel, FormTextArea, FormDropdown } from '@fluentui/react-northstar';
 import { ITaskModel } from '../../../models/tasks/TaskModel';
 import { observer } from 'mobx-react';
@@ -15,15 +15,11 @@ const departmentItems = [
     'Advertsement Department'
 ]
 
-// Dopdownin objeye donmesi gerekiyor. 
-
-
-
+// Dropdownin objeye donmesi gerekiyor. 
 
 const TaskDetailForm: React.FC<ITaskDetailFormProps> = observer(({ selectedTask, isEditableForm }) => {
 
     const { getDepartmentAsString } = store;
-
 
     return (
         <Flex gap="gap.small">
@@ -52,12 +48,14 @@ const TaskDetailForm: React.FC<ITaskDetailFormProps> = observer(({ selectedTask,
                     <FormField>
                         <FormDropdown placeholder="Select assisgment department" disabled={!isEditableForm} fluid
                             items={departmentItems}
+                            checkable
                             value={getDepartmentAsString(selectedTask!.assignedDepartment)}
                             onChange={(e) => {
                                 console.log(e)
                             }}
                         />
                     </FormField>
+
                 </Form>
             </Flex>
         </Flex>
