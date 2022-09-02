@@ -10,7 +10,7 @@ interface ITaskDeleteFormProps {
 
 const TaskDeleteDialog: React.FC<ITaskDeleteFormProps> = observer(({ taskStore }) => {
 
-    const { selectedTask, changeDeletePopupVisibility } = taskStore;
+    const { selectedTask, changeDeletePopupVisibility, deleteSelectedTaskFromList } = taskStore;
 
     return (
         <Dialog
@@ -20,6 +20,9 @@ const TaskDeleteDialog: React.FC<ITaskDeleteFormProps> = observer(({ taskStore }
                 changeDeletePopupVisibility(false)
             }}
             confirmButton="Delete"
+            onConfirm={() => {
+                deleteSelectedTaskFromList()
+            }}
             content={
                 <TaskForm selectedTask={selectedTask!} isEditableForm={false} />
             }

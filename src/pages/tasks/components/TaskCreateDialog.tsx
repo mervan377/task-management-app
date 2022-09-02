@@ -19,8 +19,8 @@ const TaskCreateDialog: React.FC<ICreateTaskProps> = observer(({ taskStore }) =>
             confirmButton="Create"
             onConfirm={() => {
                 addSelectedTaskToLists()
-                console.log(toJS(taskStore.allTasks))
-                changeCreatePopupVisibility(false)
+                // console.log(toJS(taskStore.allTasks))
+                // changeCreatePopupVisibility(false)
             }}
             content={
                 <TaskForm selectedTask={selectedTask!} isEditableForm={true} />

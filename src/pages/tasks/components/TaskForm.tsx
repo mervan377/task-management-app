@@ -15,6 +15,8 @@ const departmentItems = [
     'Advertsement Department'
 ]
 
+
+
 // Dropdownin objeye donmesi gerekiyor. 
 
 const TaskDetailForm: React.FC<ITaskDetailFormProps> = observer(({ selectedTask, isEditableForm }) => {
@@ -50,8 +52,8 @@ const TaskDetailForm: React.FC<ITaskDetailFormProps> = observer(({ selectedTask,
                             items={departmentItems}
                             checkable
                             value={getDepartmentAsString(selectedTask!.assignedDepartment)}
-                            onChange={(e) => {
-                                console.log(e)
+                            onChange={(e, selectedOption) => {
+                                (selectedTask!.assignedDepartment) = Number(selectedOption.highlightedIndex) + 1
                             }}
                         />
                     </FormField>

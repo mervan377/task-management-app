@@ -47,6 +47,7 @@ const MyTasks: React.FC<ITaskDetailFormProps> = observer(() => {
               <Table.Cell content={<Button content="Delete Task" icon={<TrashCanIcon />} iconPosition="after" />} onClick={() => {
                 store.setSelectedTask(task)
                 store.changeDeletePopupVisibility(true)
+                store.initializesMyTasks()
               }} />
             </Table.Row>
           )

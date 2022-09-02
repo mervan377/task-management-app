@@ -35,6 +35,16 @@ export class TaskStore {
     };
   };
 
+  /* Initilazie My Tasks */
+  @action
+  initializesMyTasks = (): void => {
+    
+    // const expandedIndex = this.allTasks.findIndex(
+    //   (link) => link.user.id === 2002
+    // );
+    // this.myTasks. { ...this.selectedTask! };
+  };
+
   /*  Detail Form Open  */
   @observable
   isDetailFormOpen: boolean = false;
@@ -80,20 +90,26 @@ export class TaskStore {
 
   /* Update Task From List */
   @action
-  updateSelectedTaskFromList = (rak: ITaskModel): void => {
-    this.selectedTask = {
-      id: rak.id,
-      title: rak.title,
-      description: "",
-      user: {
-        id: 0,
-        name: "",
-      },
-      assignedDepartment: Departments.HumanResources,
-      status: TaskStatus.Pending,
-      logs: [],
+  updateSelectedTaskFromList = (): void => {
+    const currentSelectedID = this.selectedTask?.id;
+    const expandedIndex = this.myTasks.findIndex(
+      (link) => link.id === currentSelectedID
+    );
+    this.myTasks[expandedIndex] = { ...this.selectedTask! };
+    this.isUpdateFormOpen = false;
+  };
+
+  /* Update Task From List */
+  @action
+  deleteSelectedTaskFromList = (): void => {
+    const currentSelectedID = this.selectedTask?.id;
+    const expandedIndex = this.myTasks.findIndex(
+      (link) => link.id === currentSelectedID
+    );
+    if (expandedIndex > -1) {
+      this.myTasks.splice(expandedIndex, 1);
     }
-     
+    this.isDeleteFormOpen = false;
   };
 
   //
@@ -136,14 +152,10 @@ export class TaskStore {
       },
       logs: [],
     },
-  ];
-
-  @observable
-  myTasks: ITaskModel[] = [
     {
-      id: 4381,
-      title: "Product Price List",
-      description: "We need to Product Price List in this week, Thanks",
+      id: 4055,
+      title: "Human Employee List",
+      description: "lorem ipsum dolar sit amet",
       status: TaskStatus.Pending,
       assignedDepartment: Departments.Sales,
       user: {
@@ -155,21 +167,10 @@ export class TaskStore {
   ];
 
   @observable
-  pendingTasks: ITaskModel[] = [
-    {
-      id: 8054,
-      title: "Department Employee List",
-      description:
-        "Please send Sales Department Employee List us via email, Thanks.",
-      status: TaskStatus.Pending,
-      assignedDepartment: Departments.HumanResources,
-      user: {
-        name: "John Doe",
-        id: 2002,
-      },
-      logs: [],
-    },
-  ];
+  myTasks: ITaskModel[] = [];
+
+  @observable
+  pendingTasks: ITaskModel[] = [];
 
   getStatusAsString = (status: TaskStatus): string => {
     switch (status) {
@@ -191,7 +192,7 @@ export class TaskStore {
       case Departments.Sales:
         return "Sales Deparment";
       case Departments.Marketing:
-        return "Marketing Deparment";
+        return "Advertisement Deparment";
       default:
         return "Error";
     }
