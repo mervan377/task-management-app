@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import {App} from './App'
+import { App } from './App'
 import { Provider, teamsTheme } from '@fluentui/react-northstar'
 import reportWebVitals from './reportWebVitals';
 

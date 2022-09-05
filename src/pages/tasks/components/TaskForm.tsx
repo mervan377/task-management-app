@@ -15,12 +15,7 @@ const departmentItems = [
     'Advertsement Department'
 ]
 
-
-
-// Dropdownin objeye donmesi gerekiyor. 
-
 const TaskDetailForm: React.FC<ITaskDetailFormProps> = observer(({ selectedTask, isEditableForm }) => {
-
     const { getDepartmentAsString } = store;
 
     return (
@@ -57,7 +52,6 @@ const TaskDetailForm: React.FC<ITaskDetailFormProps> = observer(({ selectedTask,
                             }}
                         />
                     </FormField>
-
                 </Form>
             </Flex>
         </Flex>

@@ -17,6 +17,11 @@ const MyTasks: React.FC<ITaskDetailFormProps> = observer(() => {
 
   const { myTasks, getStatusAsString, getDepartmentAsString } = store;
 
+  React.useLayoutEffect(() => {
+    store.initializesMyTasks();
+  }, [])
+
+
   return (
     <React.Fragment>
       <Table aria-label="table" >

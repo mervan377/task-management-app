@@ -14,6 +14,12 @@ const inputItems = [
 const PendingTasks: React.FC<any> = observer(() => {
 
   const { pendingTasks, getDepartmentAsString } = store;
+
+
+  React.useEffect(() => {
+    store.initializesPendingTasks();
+  }, [])
+
   return (
     <Table aria-label="table">
       <Table.Row header className='table-header'>

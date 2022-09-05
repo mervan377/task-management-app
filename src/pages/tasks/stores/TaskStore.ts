@@ -38,11 +38,13 @@ export class TaskStore {
   /* Initilazie My Tasks */
   @action
   initializesMyTasks = (): void => {
-    
-    // const expandedIndex = this.allTasks.findIndex(
-    //   (link) => link.user.id === 2002
-    // );
-    // this.myTasks. { ...this.selectedTask! };
+    this.myTasks = this.allTasks.filter((key) => key.user.id === 1001);
+  };
+
+  /* Initilazie Pending Tasks */
+  @action
+  initializesPendingTasks = (): void => {
+    this.pendingTasks = this.allTasks.filter((key) => key.status === 0)
   };
 
   /*  Detail Form Open  */
@@ -81,9 +83,10 @@ export class TaskStore {
   @action
   addSelectedTaskToLists = (): void => {
     this.selectedTask!.user = {
-      name: "John Doe",
-      id: 2002,
+      name: "Mary Glenn",
+      id: 1001,
     };
+    this.selectedTask!.status = 0
     this.allTasks.push({ ...this.selectedTask! });
     this.myTasks.push({ ...this.selectedTask! });
   };
