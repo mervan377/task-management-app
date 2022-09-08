@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Dialog } from '@fluentui/react-northstar';
 import { observer } from 'mobx-react-lite';
 import TaskForm from './TaskForm';
-import { TaskStore } from '../stores/TaskStore';
+import { TaskStore } from '../pages/tasks/stores/TaskStore';
 
 interface ITaskDeleteFormProps {
     taskStore: TaskStore

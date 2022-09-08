@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Button, ExpandIcon, Table, tableHeaderCellBehavior } from '@fluentui/react-northstar';
 import { store } from './stores/TaskStore';
-import TaskDetailDialog from './components/TaskDetailDialog';
+import TaskDetailDialog from '../../components/TaskDetailDialog';
 import { observer } from 'mobx-react-lite';
 
 interface ICreateTaskFormProps {

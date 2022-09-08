@@ -1,4 +1,3 @@
-import "../../App.css"
 import { Breadcrumb, ChevronEndIcon } from '@fluentui/react-northstar';
 import { useLocation } from 'react-router-dom';
 

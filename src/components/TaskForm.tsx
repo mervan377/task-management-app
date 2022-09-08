@@ -1,8 +1,8 @@
 import React from 'react'
 import { Flex, Form, Input, FormField, FormLabel, FormTextArea, FormDropdown } from '@fluentui/react-northstar';
-import { ITaskModel } from '../../../models/tasks/TaskModel';
-import { observer } from 'mobx-react';
-import { store } from '../stores/TaskStore';
+import { observer } from 'mobx-react'; 
+import { store } from '../pages/tasks/stores/TaskStore';
+import { ITaskModel } from '../models/tasks/TaskModel';
 
 interface ITaskDetailFormProps {
     selectedTask?: ITaskModel,

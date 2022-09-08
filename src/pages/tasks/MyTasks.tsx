@@ -1,10 +1,9 @@
-
 import * as React from 'react';
 import { Button, ExpandIcon, SettingsIcon, Table, tableHeaderCellBehavior, TrashCanIcon } from '@fluentui/react-northstar';
 
-import TaskDeleteDialog from './components/TaskDeleteDialog';
-import TaskDetailDialog from './components/TaskDetailDialog';
-import TaskUpdateDialog from './components/TaskUpdateDialog';
+import TaskDeleteDialog from '../../components/TaskDeleteDialog';
+import TaskDetailDialog from '../../components/TaskDetailDialog';
+import TaskUpdateDialog from '../../components/TaskUpdateDialog';
 import { observer } from 'mobx-react-lite';
 import { ITaskModel } from '../../models/tasks/TaskModel';
 import { store } from './stores/TaskStore';
@@ -17,10 +16,9 @@ const MyTasks: React.FC<ITaskDetailFormProps> = observer(() => {
 
   const { myTasks, getStatusAsString, getDepartmentAsString } = store;
 
-  React.useLayoutEffect(() => {
+  React.useEffect(() => {
     store.initializesMyTasks();
   }, [])
-
 
   return (
     <React.Fragment>
@@ -43,7 +41,7 @@ const MyTasks: React.FC<ITaskDetailFormProps> = observer(() => {
               <Table.Cell content={getStatusAsString(task.status)} />
               <Table.Cell content={<Button content="Detail Task" icon={<ExpandIcon />} iconPosition="after" onClick={() => {
                 store.setSelectedTask(task)
-                store.changeDetailPopupVisibility(true)
+                store.changeDetailPopupVisibility(true) 
               }} />} />
               <Table.Cell content={<Button content="Update" icon={<SettingsIcon />} iconPosition="after" onClick={() => {
                 store.setSelectedTask(task)
@@ -52,7 +50,6 @@ const MyTasks: React.FC<ITaskDetailFormProps> = observer(() => {
               <Table.Cell content={<Button content="Delete Task" icon={<TrashCanIcon />} iconPosition="after" />} onClick={() => {
                 store.setSelectedTask(task)
                 store.changeDeletePopupVisibility(true)
-                store.initializesMyTasks()
               }} />
             </Table.Row>
           )

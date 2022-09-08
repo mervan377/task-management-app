@@ -18,22 +18,22 @@ function Header() {
             key: 'logo'
           },
           {
-            content: <Nav to="/" className="">Home</Nav>,
+            content: <Nav to="/" className="header-menu-item">Home</Nav>,
             href: '/',
             key: 'Home'
           },
           {
-            content: <Nav to="AllTasks" className="">All Tasks</Nav>,
+            content: <Nav to="AllTasks" className="header-menu-item">All Tasks</Nav>,
             href: '/AllTasks',
             key: 'AllTasks'
           },
           {
-            content: <Nav to="MyTasks" className="">My Tasks</Nav>,
+            content: <Nav to="MyTasks" className="header-menu-item">My Tasks</Nav>,
             href: '/MyTasks',
             key: 'MyTasks'
           },
           {
-            content: <Nav to="PendingTasks" className="">Pending Tasks</Nav>,
+            content: <Nav to="PendingTasks" className="header-menu-item">Pending Tasks</Nav>,
             href: '/PendingTasks',
             key: 'PendingTasks'
           },

@@ -38,13 +38,15 @@ export class TaskStore {
   /* Initilazie My Tasks */
   @action
   initializesMyTasks = (): void => {
-    this.myTasks = this.allTasks.filter((key) => key.user.id === 1001);
+    this.myTasks = this.allTasks.filter((myTask) => myTask.user.id === 1001);
   };
 
   /* Initilazie Pending Tasks */
   @action
   initializesPendingTasks = (): void => {
-    this.pendingTasks = this.allTasks.filter((key) => key.status === 0)
+    this.pendingTasks = this.allTasks.filter(
+      (pendingTask) => pendingTask.status === 0
+    );
   };
 
   /*  Detail Form Open  */
@@ -82,13 +84,15 @@ export class TaskStore {
   /* Add Task to List */
   @action
   addSelectedTaskToLists = (): void => {
+    this.selectedTask!.id = this.allTasks.length + 1;
     this.selectedTask!.user = {
       name: "Mary Glenn",
       id: 1001,
     };
-    this.selectedTask!.status = 0
+    this.selectedTask!.status = 0;
     this.allTasks.push({ ...this.selectedTask! });
-    this.myTasks.push({ ...this.selectedTask! });
+    this.initializesMyTasks();
+    this.initializesPendingTasks();
   };
 
   /* Update Task From List */
@@ -106,11 +110,11 @@ export class TaskStore {
   @action
   deleteSelectedTaskFromList = (): void => {
     const currentSelectedID = this.selectedTask?.id;
-    const expandedIndex = this.myTasks.findIndex(
-      (link) => link.id === currentSelectedID
+    const currentSelectedIndex = this.myTasks.findIndex(
+      (myTask) => myTask.id === currentSelectedID
     );
-    if (expandedIndex > -1) {
-      this.myTasks.splice(expandedIndex, 1);
+    if (currentSelectedIndex > -1) {
+      this.myTasks.splice(currentSelectedIndex, 1);
     }
     this.isDeleteFormOpen = false;
   };

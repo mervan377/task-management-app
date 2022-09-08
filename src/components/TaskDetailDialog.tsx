@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Dialog } from '@fluentui/react-northstar';
 import TaskForm from './TaskForm';
-import { TaskStore } from '../stores/TaskStore';
+import { TaskStore } from '../pages/tasks/stores/TaskStore';
 import { observer } from 'mobx-react-lite';
 interface ITaskDetailFormProps {
   taskStore: TaskStore

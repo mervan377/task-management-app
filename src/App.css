@@ -33,7 +33,7 @@
 }
 
 .ui-menu li:last-child {
-  position: absolute; 
+  position: absolute;
   box-shadow: none;
   margin-right: 2rem;
 }
@@ -57,8 +57,8 @@
 .home_box {
   min-width: 250px;
   display: flex;
-  padding: 0.2rem 1.4rem; 
-  box-shadow: 0 0 8px #aab; 
+  padding: 0.2rem 1.4rem;
+  box-shadow: 0 0 8px #aab;
 }
 
 .home_box .extra_info {
@@ -108,4 +108,28 @@
 
 .ui-button {
   float: right;
+}
+
+.header-menu-item {
+  color: #333;
+  text-decoration: none;
+}
+
+.ui-menu__itemwrapper>a {}
+
+.login-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-center {
+  width: 380px;
+  height: auto; 
 }
