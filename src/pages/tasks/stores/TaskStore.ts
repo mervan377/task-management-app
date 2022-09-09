@@ -1,3 +1,4 @@
+import axios from "axios";
 import { action, makeObservable, observable } from "mobx";
 import {
   Departments,
@@ -16,6 +17,94 @@ export class TaskStore {
   @action
   setSelectedTask = (task: ITaskModel): void => {
     this.selectedTask = { ...task };
+  };
+
+  /* Add Task to List */
+  @action
+  addSelectedTaskToLists = (): void => {
+    
+    const userJWTToken: string = JSON.parse(
+      localStorage.getItem("user") || ""
+    ).jwtToken;
+
+    var data = JSON.stringify({
+      title: this.selectedTask?.title,
+      description: this.selectedTask?.description,
+      assignedDepartment: this.selectedTask?.assignedDepartment,
+    });
+
+    var config = {
+      method: "post",
+      url: "http://localhost:5000/api/task",
+      headers: {
+        Authorization: `Bearer ${userJWTToken}`,
+        "Content-Type": "application/json",
+      },
+      data: data,
+    };
+
+    axios(config)
+      .then(function (response) {
+        console.log(JSON.stringify(response.data));
+        initializeLists2();
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
+  /* Update Task From List */
+  @action
+  updateSelectedTaskFromList = (): void => {
+    const currentSelectedID = this.selectedTask?.id;
+    const expandedIndex = this.myTasks.findIndex(
+      (link) => link.id === currentSelectedID
+    );
+    this.myTasks[expandedIndex] = { ...this.selectedTask! };
+    this.isUpdateFormOpen = false;
+  };
+
+  @action
+  initializeLists = (): void => {
+    this.initilizesAllTasks()
+    this.initializesMyTasks()
+    this.initializesPendingTasks()
+  }
+
+  /* Update Task From List */
+  @action
+  deleteSelectedTaskFromList = (): void => {
+    const currentSelectedID = this.selectedTask?.id;
+    const currentSelectedIndex = this.myTasks.findIndex(
+      (myTask) => myTask.id === currentSelectedID
+    );
+    if (currentSelectedIndex > -1) {
+      this.myTasks.splice(currentSelectedIndex, 1);
+    }
+    this.isDeleteFormOpen = false;
+
+    const userJWTToken: string = JSON.parse(
+      localStorage.getItem("user") || ""
+    ).jwtToken;
+
+    var data = "";
+    var config = {
+      method: "delete",
+      url: "http://localhost:5000/api/task/4381",
+      headers: {
+        Authorization: `Bearer ${userJWTToken}`,
+      },
+      data: data,
+    };
+
+    axios(config)
+      .then(function (response) {
+        console.log(JSON.stringify(response.data));
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+
   };
 
   /* Make Form Empty */
@@ -37,16 +126,72 @@ export class TaskStore {
 
   /* Initilazie My Tasks */
   @action
+  initilizesAllTasks = (): void => {
+    const userJWTToken: string = JSON.parse(
+      localStorage.getItem("user") || ""
+    ).jwtToken;
+
+    var config = {
+      method: "get",
+      url: "http://localhost:5000/api/task",
+      headers: {
+        Authorization: `Bearer ${userJWTToken}`,
+      },
+    };
+    axios(config)
+      .then(function (response) {
+        store.allTasks = response.data.payload;
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
+  /* Initilazie My Tasks */
+  @action
   initializesMyTasks = (): void => {
-    this.myTasks = this.allTasks.filter((myTask) => myTask.user.id === 1001);
+    const userJWTToken: string = JSON.parse(
+      localStorage.getItem("user") || ""
+    ).jwtToken;
+
+    var config = {
+      method: "get",
+      url: "http://localhost:5000/api/task/my-tasks",
+      headers: {
+        Authorization: `Bearer ${userJWTToken}`,
+      },
+    };
+    axios(config)
+      .then(function (response) {
+        store.myTasks = response.data.payload;
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   };
 
   /* Initilazie Pending Tasks */
   @action
   initializesPendingTasks = (): void => {
-    this.pendingTasks = this.allTasks.filter(
-      (pendingTask) => pendingTask.status === 0
-    );
+    const userJWTToken: string = JSON.parse(
+      localStorage.getItem("user") || ""
+    ).jwtToken;
+
+    var config = {
+      method: "get",
+      url: "http://localhost:5000/api/task/pendings",
+      headers: {
+        Authorization: `Bearer ${userJWTToken}`,
+      },
+    };
+
+    axios(config)
+      .then(function (response) {
+        store.pendingTasks = response.data.payload;
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   };
 
   /*  Detail Form Open  */
@@ -81,97 +226,9 @@ export class TaskStore {
     this.isDeleteFormOpen = isOpen;
   };
 
-  /* Add Task to List */
-  @action
-  addSelectedTaskToLists = (): void => {
-    this.selectedTask!.id = this.allTasks.length + 1;
-    this.selectedTask!.user = {
-      name: "Mary Glenn",
-      id: 1001,
-    };
-    this.selectedTask!.status = 0;
-    this.allTasks.push({ ...this.selectedTask! });
-    this.initializesMyTasks();
-    this.initializesPendingTasks();
-  };
-
-  /* Update Task From List */
-  @action
-  updateSelectedTaskFromList = (): void => {
-    const currentSelectedID = this.selectedTask?.id;
-    const expandedIndex = this.myTasks.findIndex(
-      (link) => link.id === currentSelectedID
-    );
-    this.myTasks[expandedIndex] = { ...this.selectedTask! };
-    this.isUpdateFormOpen = false;
-  };
-
-  /* Update Task From List */
-  @action
-  deleteSelectedTaskFromList = (): void => {
-    const currentSelectedID = this.selectedTask?.id;
-    const currentSelectedIndex = this.myTasks.findIndex(
-      (myTask) => myTask.id === currentSelectedID
-    );
-    if (currentSelectedIndex > -1) {
-      this.myTasks.splice(currentSelectedIndex, 1);
-    }
-    this.isDeleteFormOpen = false;
-  };
-
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-
   /* ******************************************* */
   @observable
-  allTasks: ITaskModel[] = [
-    {
-      id: 8054,
-      title: "Department Employee List",
-      description:
-        "Please send Sales Department Employee List us via email, Thanks.",
-      status: TaskStatus.Pending,
-      assignedDepartment: Departments.HumanResources,
-      user: {
-        name: "John Doe",
-        id: 2002,
-      },
-      logs: [],
-    },
-    {
-      id: 4381,
-      title: "Product Price List",
-      description: "We need to Product Price List in this week, Thanks",
-      status: TaskStatus.Pending,
-      assignedDepartment: Departments.Sales,
-      user: {
-        name: "Mary Glenn",
-        id: 1001,
-      },
-      logs: [],
-    },
-    {
-      id: 4055,
-      title: "Human Employee List",
-      description: "lorem ipsum dolar sit amet",
-      status: TaskStatus.Pending,
-      assignedDepartment: Departments.Sales,
-      user: {
-        name: "Mary Glenn",
-        id: 1001,
-      },
-      logs: [],
-    },
-  ];
+  allTasks: ITaskModel[] = [];
 
   @observable
   myTasks: ITaskModel[] = [];
@@ -207,3 +264,9 @@ export class TaskStore {
 }
 
 export const store = new TaskStore();
+
+
+function initializeLists2() {
+  store.initializeLists()
+}
+
