@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './App.css';
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import TasksLayout from './pages/TaskLayout';
@@ -13,9 +13,15 @@ import LoginLayout from './pages/LoginLayout';
 
 const App: React.FC = () => {
 
-  const strCurrentUser = localStorage.getItem("currentUser");
+  const strCurrentUser = localStorage.getItem("user");
 
-  return strCurrentUser === null ? (
+  useEffect(() => {
+    // if (!strCurrentUser) {
+    //   window.location.href = "/Login"
+    // }
+  }, [])
+
+  return strCurrentUser !== null ? (
     <BrowserRouter>
       <Routes>
         <Route element={<TasksLayout />} >
@@ -24,7 +30,6 @@ const App: React.FC = () => {
           <Route path='/MyTasks' element={<MyTasks />} />
           <Route path='/Deneme' element={<Deneme />} />
           <Route path='/PendingTasks' element={<PendingTasks />} />
-      <Route path='/Login' element={<Login />} />
         </Route>
       </Routes>
     </BrowserRouter>

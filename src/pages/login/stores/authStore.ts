@@ -1,21 +1,39 @@
-import { action, makeObservable, observable } from "mobx";
-import {
-  Departments,
-  ILoginModel,
-  IUserModel,
-} from "../../../models/login/LoginModel";
+import axios from "axios";
+import { action, makeObservable, observable, toJS } from "mobx";
+import { getAllUsers } from "../../../api/api";
+import { Departments, ILoginModel } from "../../../models/login/LoginModel";
 
 export class AuthStore {
   constructor() {
     makeObservable(this);
+
+    this.loginModel = {
+      email: "",
+      password: ""
+    }
   }
+
 
   /* Select Current User */
   @observable
-  selectedUser: ILoginModel | undefined;
+  loginModel: ILoginModel ;
+
   @action
-  setSelectedUser = (login: ILoginModel): void => {
-    console.log(login);
+  login = (): void => {
+    var config = {
+      method: "post",
+      url: "http://localhost:5000/api/auth/login",
+      data: toJS(this.loginModel),
+    };
+
+    axios(config)
+      .then(function (response) {
+        localStorage.setItem("user",JSON.stringify(response.data.payload))
+        window.location.href = "/"
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   };
 
   getDepartmentAsString = (status: Departments): string => {
