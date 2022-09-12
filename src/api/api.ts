@@ -11,9 +11,10 @@ export const getAllUsers = (email: string, pass: string): void => {
     .then(function (response) {
       console.log(JSON.stringify(response.data));
 
-      console.log(response.data.payload)
+      console.log(response.data.payload);
     })
     .catch(function (error) {
       console.log(error);
     });
 };
+

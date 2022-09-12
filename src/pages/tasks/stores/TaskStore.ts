@@ -3,7 +3,7 @@ import {
   Departments,
   ITaskModel,
   TaskStatus,
-} from "../../../models/tasks/TaskModel";
+} from "../../../models/tasks/TaskModel"; 
 
 export class TaskStore {
   constructor() {
