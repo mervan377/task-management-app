@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import './App.css';
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import TasksLayout from './pages/TaskLayout';
@@ -10,16 +10,13 @@ import PendingTasks from './pages/tasks/PendingTasks';
 import Login from './pages/login/Login';
 import Deneme from './pages/tasks/Deneme';
 import LoginLayout from './pages/LoginLayout';
+import { store } from './pages/tasks/stores/TaskStore';
 
 const App: React.FC = () => {
 
   const strCurrentUser = localStorage.getItem("user");
 
-  useEffect(() => {
-    // if (!strCurrentUser) {
-    //   window.location.href = "/Login"
-    // }
-  }, [])
+
 
   return strCurrentUser !== null ? (
     <BrowserRouter>

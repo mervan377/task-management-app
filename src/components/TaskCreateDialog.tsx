@@ -19,7 +19,7 @@ const TaskCreateDialog: React.FC<ICreateTaskProps> = observer(({ taskStore }) =>
             confirmButton="Create"
             onConfirm={() => {
                 addSelectedTaskToLists()
-                console.log(toJS(taskStore.allTasks))
+                // console.log(toJS(taskStore.allTasks))
                 // changeCreatePopupVisibility(false)
             }}
             content={

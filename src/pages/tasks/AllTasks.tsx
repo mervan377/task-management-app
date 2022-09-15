@@ -25,7 +25,7 @@ const AllTasks: React.FC<ICreateTaskFormProps> = observer(() => {
           return (
             <Table.Row key={index}>
               <Table.Cell content={task.title} />
-              <Table.Cell content={task.user.name} />
+              {/* <Table.Cell content={task.user.name} /> */}
               <Table.Cell content={getDepartmentAsString(task.assignedDepartment)} />
               <Table.Cell content={getStatusAsString(task.status)} />
               <Table.Cell content={<Button content="Detail Task" icon={<ExpandIcon />} iconPosition="after" onClick={() => {

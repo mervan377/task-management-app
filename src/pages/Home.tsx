@@ -1,7 +1,14 @@
 import { NotesIcon, PersonIcon, TaskListIcon } from '@fluentui/react-northstar'
 import React from 'react'
+import { store } from './tasks/stores/TaskStore';
 
 function Home() {
+
+  React.useEffect(() => {
+    store.initializeLists(); 
+  }, [])
+
+  
   return (
     <div>
       <div className="home_box_wrapper">

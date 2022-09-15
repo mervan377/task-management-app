@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const getAllUsers = (email: string, pass: string): void => {
+export const connectPostman = (method: string, url: string, headers = null, data: null): void => {
   var config = {
     method: "get",
     url: "http://localhost:5000/api/auth/all-users",

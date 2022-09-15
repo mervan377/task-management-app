@@ -2,11 +2,11 @@ import { Menu, Button } from '@fluentui/react-northstar'
 import { LeaveIcon } from '@fluentui/react-icons-northstar';
 import "../App.css"
 import { NavLink as Nav } from 'react-router-dom'
-
+import { authStore } from "../pages/login/stores/authStore"
 
 function Header() {
   const LogoutHandle = () => {
-    alert("it is going to quit'")
+    authStore.logout()
   }
   return (
     <div>

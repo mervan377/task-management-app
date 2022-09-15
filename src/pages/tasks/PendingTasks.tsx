@@ -15,9 +15,6 @@ const PendingTasks: React.FC<any> = observer(() => {
 
   const { pendingTasks, getDepartmentAsString } = store;
 
-  React.useEffect(() => {
-    store.initializesPendingTasks();
-  }, [])
 
   return (
     <React.Fragment>

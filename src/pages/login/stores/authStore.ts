@@ -1,7 +1,6 @@
 import axios from "axios";
 import { action, makeObservable, observable, toJS } from "mobx";
-import { getAllUsers } from "../../../api/api";
-import { Departments, ILoginModel } from "../../../models/login/LoginModel";
+import { ILoginModel } from "../../../models/login/LoginModel";
 
 export class AuthStore {
   constructor() {
@@ -9,15 +8,13 @@ export class AuthStore {
 
     this.loginModel = {
       email: "",
-      password: ""
-    }
+      password: "",
+    };
   }
-
 
   /* Select Current User */
   @observable
-  loginModel: ILoginModel ;
-
+  loginModel: ILoginModel;
   @action
   login = (): void => {
     var config = {
@@ -28,25 +25,18 @@ export class AuthStore {
 
     axios(config)
       .then(function (response) {
-        localStorage.setItem("user",JSON.stringify(response.data.payload))
-        window.location.href = "/"
+        localStorage.setItem("user", JSON.stringify(response.data.payload));
+        window.location.href = "/";
       })
       .catch(function (error) {
         console.log(error);
       });
   };
 
-  getDepartmentAsString = (status: Departments): string => {
-    switch (status) {
-      case Departments.HumanResources:
-        return "Human Resources Deparment";
-      case Departments.Sales:
-        return "Sales Deparment";
-      case Departments.Marketing:
-        return "Advertisement Deparment";
-      default:
-        return "Error";
-    }
+  @action
+  logout = (): void => {
+    localStorage.removeItem("user");
+    window.location.href = "/Login";
   };
 }
 
