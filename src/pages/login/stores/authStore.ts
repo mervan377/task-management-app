@@ -1,6 +1,5 @@
 import axios from "axios";
 import { action, makeObservable, observable, toJS } from "mobx";
-import { getAllUsers } from "../../../api/api";
 import { Departments, ILoginModel } from "../../../models/login/LoginModel";
 
 export class AuthStore {

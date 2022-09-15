@@ -6,7 +6,8 @@ import { NavLink as Nav } from 'react-router-dom'
 
 function Header() {
   const LogoutHandle = () => {
-    alert("it is going to quit'")
+    localStorage.removeItem("user")
+    window.location.href = "/Login"
   }
   return (
     <div>
