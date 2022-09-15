@@ -33,3 +33,5 @@ export const getTasks = (method: string, url: string, data: any) => {
     }); 
 
 };
+
+//  getTasks("put", `${currentSelectedID}`, `${data}`); <== Böyle kullanıyorum
