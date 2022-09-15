@@ -4,7 +4,7 @@ import {
   ITaskModel,
   TaskStatus,
 } from "../../../models/tasks/TaskModel";
-import { getTasks } from "../../../api/api";
+import { getTasks, setTasks } from "../../../api/api";
 
 export class TaskStore {
   constructor() {
@@ -22,20 +22,17 @@ export class TaskStore {
   /* Add Task to List */
   @action
   addSelectedTaskToLists = (): void => {
-    const currentSelectedID = this.selectedTask?.id;
     const title = this.selectedTask?.title;
     const description = this.selectedTask?.description;
     const assignedDepartment = this.selectedTask?.assignedDepartment;
-
     var data = JSON.stringify({
       title: title,
-      description: description, 
-      assignedDepartment: assignedDepartment
+      description: description,
+      assignedDepartment: assignedDepartment,
     });
-
-    getTasks("post", `${currentSelectedID}`, `${data}`);
-
-    this.isUpdateFormOpen = false;
+    setTasks("post", "/", `${data}`);
+    this.initalizesTaskList();
+    this.isCreateFormOpen = false;
   };
 
   /* Update Task From List */
@@ -43,16 +40,18 @@ export class TaskStore {
   updateSelectedTaskFromList = (): void => {
     const currentSelectedID = this.selectedTask?.id;
     const title = this.selectedTask?.title;
-    const description = this.selectedTask?.description; 
+    const description = this.selectedTask?.description;
 
     var data = JSON.stringify({
       title: title,
-      description: description, 
+      description: description,
     });
-
-    console.log(data)
-
-    getTasks("put", `${currentSelectedID}`, `${data}`);
+    if (this.selectedTask?.status === 0) {
+      setTasks("put", `/${currentSelectedID}`, `${data}`);
+      this.initalizesTaskList();
+    } else {
+      this.changeWarningOpenModal(true);
+    }
 
     this.isUpdateFormOpen = false;
   };
@@ -60,13 +59,27 @@ export class TaskStore {
   /* Update Task From List */
   @action
   deleteSelectedTaskFromList = (): void => {
+    if (this.selectedTask?.status === 0) {
+      const currentSelectedID = this.selectedTask?.id;
+      getTasks("delete", `/${currentSelectedID}`, "");
+      this.initalizesTaskList();
+    } else {
+      this.changeWarningOpenModal(true);
+    }
+    this.isDeleteFormOpen = false;
+  };
+
+  @action
+  changeStatusTask = (statusName: any): void => {
     const currentSelectedID = this.selectedTask?.id;
-    getTasks("delete", `/${currentSelectedID}`, "");
+    statusName = statusName.toString().toLowerCase();
+    getTasks("get", `/${statusName}/${currentSelectedID}`, "");
+    this.initalizesTaskList();
   };
 
   /* Initilazie My Tasks */
   @action
-  initilizesAllTasks = (): void => {
+  initializesAllTasks = (): void => {
     getTasks("get", "/", "");
   };
 
@@ -80,6 +93,13 @@ export class TaskStore {
   @action
   initializesPendingTasks = (): void => {
     getTasks("get", "/pendings", "");
+  };
+
+  @action
+  initalizesTaskList = (): void => {
+    this.initializesAllTasks();
+    this.initializesMyTasks();
+    this.initializesPendingTasks();
   };
 
   /* Make Form Empty */
@@ -129,6 +149,30 @@ export class TaskStore {
   @action
   changeDeletePopupVisibility = (isOpen: boolean): void => {
     this.isDeleteFormOpen = isOpen;
+  };
+
+  /*  Are You Sure Form Open  */
+  @observable
+  isAreYouSureFormOpen: boolean = false;
+  @action
+  changeAreYouSurePopupVisibility = (isOpen: boolean): void => {
+    this.isAreYouSureFormOpen = isOpen;
+  };
+
+  /*  Status   */
+  @observable
+  isStatusModalOpen: any = "Pending";
+  @action
+  changeStatusModalOpen = (isOpen: any): void => {
+    this.isStatusModalOpen = isOpen;
+  };
+
+  /*  Warning Modal Open Close   */
+  @observable
+  isWarningOpenModal: boolean = false;
+  @action
+  changeWarningOpenModal = (isOpen: boolean): void => {
+    this.isWarningOpenModal = isOpen;
   };
 
   /* ******************************************* */

@@ -10,12 +10,10 @@ import PendingTasks from './pages/tasks/PendingTasks';
 import Login from './pages/login/Login';
 import Deneme from './pages/tasks/Deneme';
 import LoginLayout from './pages/LoginLayout';
-import { store } from './pages/tasks/stores/TaskStore';
 
 const App: React.FC = () => {
 
   const strCurrentUser = localStorage.getItem("user");
-
 
 
   return strCurrentUser !== null ? (

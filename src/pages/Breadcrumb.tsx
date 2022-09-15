@@ -1,11 +1,13 @@
 import { Breadcrumb, ChevronEndIcon } from '@fluentui/react-northstar';
-import { useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom'; 
 
 
 function BreadcrumbTop() {
 
     const location = useLocation();
     let currentLocation: string = location.pathname.replace('/', '')
+
+    
 
     return (
         <>
@@ -20,6 +22,7 @@ function BreadcrumbTop() {
                     <Breadcrumb.Link >{currentLocation}</Breadcrumb.Link>
                 </Breadcrumb.Item>
             </Breadcrumb>
+
         </ >
     )
 }

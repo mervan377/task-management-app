@@ -1,9 +1,10 @@
 import * as React from 'react';
-import { Button, ExpandIcon, SettingsIcon, Table, tableHeaderCellBehavior, TrashCanIcon } from '@fluentui/react-northstar';
+import { AddIcon, Button, ExpandIcon, SettingsIcon, Table, tableHeaderCellBehavior, TrashCanIcon } from '@fluentui/react-northstar';
 
 import TaskDeleteDialog from '../../components/TaskDeleteDialog';
 import TaskDetailDialog from '../../components/TaskDetailDialog';
 import TaskUpdateDialog from '../../components/TaskUpdateDialog';
+import WarningDialog from '../../components/WarningDailog'
 import { observer } from 'mobx-react-lite';
 import { ITaskModel } from '../../models/tasks/TaskModel';
 import { store } from './stores/TaskStore';
@@ -22,6 +23,10 @@ const MyTasks: React.FC<ITaskDetailFormProps> = observer(() => {
 
   return (
     <React.Fragment>
+      <Button content="Create Task" icon={<AddIcon />} iconPosition="after" onClick={() => {
+        store.initializeSelectedTask()
+        store.changeCreatePopupVisibility(true)
+      }} />
       <Table aria-label="table" >
         <Table.Row header className='table-header'>
           <Table.Cell content="Title" accessibility={tableHeaderCellBehavior} />
@@ -41,7 +46,7 @@ const MyTasks: React.FC<ITaskDetailFormProps> = observer(() => {
               <Table.Cell content={getStatusAsString(task.status)} />
               <Table.Cell content={<Button content="Detail Task" icon={<ExpandIcon />} iconPosition="after" onClick={() => {
                 store.setSelectedTask(task)
-                store.changeDetailPopupVisibility(true)  
+                store.changeDetailPopupVisibility(true)
               }} />} />
               <Table.Cell content={<Button content="Update" icon={<SettingsIcon />} iconPosition="after" onClick={() => {
                 store.setSelectedTask(task)
@@ -56,9 +61,11 @@ const MyTasks: React.FC<ITaskDetailFormProps> = observer(() => {
         })
         }
       </Table>
+
+      <WarningDialog />
       <TaskDeleteDialog taskStore={store} />
-      <TaskDetailDialog taskStore={store} />
       <TaskUpdateDialog taskStore={store} />
+      <TaskDetailDialog taskStore={store} />
     </React.Fragment>
   )
 })

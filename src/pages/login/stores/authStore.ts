@@ -1,5 +1,5 @@
-import axios from "axios";
 import { action, makeObservable, observable, toJS } from "mobx";
+import { setAuth } from "../../../api/api";
 import { Departments, ILoginModel } from "../../../models/login/LoginModel";
 
 export class AuthStore {
@@ -8,31 +8,24 @@ export class AuthStore {
 
     this.loginModel = {
       email: "",
-      password: ""
-    }
+      password: "",
+    };
   }
-
 
   /* Select Current User */
   @observable
-  loginModel: ILoginModel ;
+  loginModel: ILoginModel;
 
   @action
   login = (): void => {
-    var config = {
-      method: "post",
-      url: "http://localhost:5000/api/auth/login",
-      data: toJS(this.loginModel),
-    };
+    setAuth("post", "/login", toJS(this.loginModel));
+  };
 
-    axios(config)
-      .then(function (response) {
-        localStorage.setItem("user",JSON.stringify(response.data.payload))
-        window.location.href = "/"
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+  /* Logout user */
+  @action
+  logout = (): void => {
+    localStorage.removeItem("user");
+    window.location.href = "/Login";
   };
 
   getDepartmentAsString = (status: Departments): string => {
