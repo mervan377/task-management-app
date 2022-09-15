@@ -1,14 +1,34 @@
 import { NotesIcon, PersonIcon, TaskListIcon } from '@fluentui/react-northstar'
 import React from 'react'
-import { store } from './tasks/stores/TaskStore';
+import axios from "axios"
+import { userJWTToken } from '../api/api';
+
+
 
 function Home() {
 
   React.useEffect(() => {
-    store.initializeLists(); 
-  }, [])
 
-  
+    var config = {
+      method: 'get',
+      url: 'http://localhost:5000/api/task/reset-data',
+      headers: {
+        'Authorization': `${userJWTToken}`
+      }
+    };
+
+    axios(config)
+      .then(function (response) {
+        console.log(JSON.stringify(response.data));
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+
+  })
+
+
+
   return (
     <div>
       <div className="home_box_wrapper">

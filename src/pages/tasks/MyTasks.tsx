@@ -16,6 +16,10 @@ const MyTasks: React.FC<ITaskDetailFormProps> = observer(() => {
 
   const { myTasks, getStatusAsString, getDepartmentAsString } = store;
 
+  React.useEffect(() => {
+    store.initializesMyTasks();
+  }, [])
+
   return (
     <React.Fragment>
       <Table aria-label="table" >
@@ -37,7 +41,7 @@ const MyTasks: React.FC<ITaskDetailFormProps> = observer(() => {
               <Table.Cell content={getStatusAsString(task.status)} />
               <Table.Cell content={<Button content="Detail Task" icon={<ExpandIcon />} iconPosition="after" onClick={() => {
                 store.setSelectedTask(task)
-                store.changeDetailPopupVisibility(true)
+                store.changeDetailPopupVisibility(true)  
               }} />} />
               <Table.Cell content={<Button content="Update" icon={<SettingsIcon />} iconPosition="after" onClick={() => {
                 store.setSelectedTask(task)

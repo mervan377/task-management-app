@@ -1,10 +1,10 @@
-import axios from "axios";
 import { action, makeObservable, observable } from "mobx";
 import {
   Departments,
   ITaskModel,
   TaskStatus,
 } from "../../../models/tasks/TaskModel";
+import { getTasks } from "../../../api/api";
 
 export class TaskStore {
   constructor() {
@@ -22,89 +22,64 @@ export class TaskStore {
   /* Add Task to List */
   @action
   addSelectedTaskToLists = (): void => {
-    
-    const userJWTToken: string = JSON.parse(
-      localStorage.getItem("user") || ""
-    ).jwtToken;
+    const currentSelectedID = this.selectedTask?.id;
+    const title = this.selectedTask?.title;
+    const description = this.selectedTask?.description;
+    const assignedDepartment = this.selectedTask?.assignedDepartment;
 
     var data = JSON.stringify({
-      title: this.selectedTask?.title,
-      description: this.selectedTask?.description,
-      assignedDepartment: this.selectedTask?.assignedDepartment,
+      title: title,
+      description: description, 
+      assignedDepartment: assignedDepartment
     });
 
-    var config = {
-      method: "post",
-      url: "http://localhost:5000/api/task",
-      headers: {
-        Authorization: `Bearer ${userJWTToken}`,
-        "Content-Type": "application/json",
-      },
-      data: data,
-    };
+    getTasks("post", `${currentSelectedID}`, `${data}`);
 
-    axios(config)
-      .then(function (response) {
-        console.log(JSON.stringify(response.data));
-        initializeLists2();
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+    this.isUpdateFormOpen = false;
   };
 
   /* Update Task From List */
   @action
   updateSelectedTaskFromList = (): void => {
     const currentSelectedID = this.selectedTask?.id;
-    const expandedIndex = this.myTasks.findIndex(
-      (link) => link.id === currentSelectedID
-    );
-    this.myTasks[expandedIndex] = { ...this.selectedTask! };
+    const title = this.selectedTask?.title;
+    const description = this.selectedTask?.description; 
+
+    var data = JSON.stringify({
+      title: title,
+      description: description, 
+    });
+
+    console.log(data)
+
+    getTasks("put", `${currentSelectedID}`, `${data}`);
+
     this.isUpdateFormOpen = false;
   };
-
-  @action
-  initializeLists = (): void => {
-    this.initilizesAllTasks()
-    this.initializesMyTasks()
-    this.initializesPendingTasks()
-  }
 
   /* Update Task From List */
   @action
   deleteSelectedTaskFromList = (): void => {
     const currentSelectedID = this.selectedTask?.id;
-    const currentSelectedIndex = this.myTasks.findIndex(
-      (myTask) => myTask.id === currentSelectedID
-    );
-    if (currentSelectedIndex > -1) {
-      this.myTasks.splice(currentSelectedIndex, 1);
-    }
-    this.isDeleteFormOpen = false;
+    getTasks("delete", `/${currentSelectedID}`, "");
+  };
 
-    const userJWTToken: string = JSON.parse(
-      localStorage.getItem("user") || ""
-    ).jwtToken;
+  /* Initilazie My Tasks */
+  @action
+  initilizesAllTasks = (): void => {
+    getTasks("get", "/", "");
+  };
 
-    var data = "";
-    var config = {
-      method: "delete",
-      url: "http://localhost:5000/api/task/4381",
-      headers: {
-        Authorization: `Bearer ${userJWTToken}`,
-      },
-      data: data,
-    };
+  /* Initilazie My Tasks */
+  @action
+  initializesMyTasks = (): void => {
+    getTasks("get", "/my-tasks", "");
+  };
 
-    axios(config)
-      .then(function (response) {
-        console.log(JSON.stringify(response.data));
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-
+  /* Initilazie Pending Tasks */
+  @action
+  initializesPendingTasks = (): void => {
+    getTasks("get", "/pendings", "");
   };
 
   /* Make Form Empty */
@@ -122,76 +97,6 @@ export class TaskStore {
       status: TaskStatus.Pending,
       logs: [],
     };
-  };
-
-  /* Initilazie My Tasks */
-  @action
-  initilizesAllTasks = (): void => {
-    const userJWTToken: string = JSON.parse(
-      localStorage.getItem("user") || ""
-    ).jwtToken;
-
-    var config = {
-      method: "get",
-      url: "http://localhost:5000/api/task",
-      headers: {
-        Authorization: `Bearer ${userJWTToken}`,
-      },
-    };
-    axios(config)
-      .then(function (response) {
-        store.allTasks = response.data.payload;
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  };
-
-  /* Initilazie My Tasks */
-  @action
-  initializesMyTasks = (): void => {
-    const userJWTToken: string = JSON.parse(
-      localStorage.getItem("user") || ""
-    ).jwtToken;
-
-    var config = {
-      method: "get",
-      url: "http://localhost:5000/api/task/my-tasks",
-      headers: {
-        Authorization: `Bearer ${userJWTToken}`,
-      },
-    };
-    axios(config)
-      .then(function (response) {
-        store.myTasks = response.data.payload;
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  };
-
-  /* Initilazie Pending Tasks */
-  @action
-  initializesPendingTasks = (): void => {
-    const userJWTToken: string = JSON.parse(
-      localStorage.getItem("user") || ""
-    ).jwtToken;
-
-    var config = {
-      method: "get",
-      url: "http://localhost:5000/api/task/pendings",
-      headers: {
-        Authorization: `Bearer ${userJWTToken}`,
-      },
-    };
-
-    axios(config)
-      .then(function (response) {
-        store.pendingTasks = response.data.payload;
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
   };
 
   /*  Detail Form Open  */
@@ -264,9 +169,3 @@ export class TaskStore {
 }
 
 export const store = new TaskStore();
-
-
-function initializeLists2() {
-  store.initializeLists()
-}
-

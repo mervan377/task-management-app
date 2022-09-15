@@ -1,19 +1,35 @@
 import axios from "axios";
+import { store } from "../pages/tasks/stores/TaskStore";
 
-export const connectPostman = (method: string, url: string, headers = null, data: null): void => {
+export let userJWTToken: string = "";
+
+if (localStorage.getItem("user") !== null) {
+  userJWTToken = JSON.parse(localStorage.getItem("user") || "").jwtToken;
+}
+
+export const getTasks = (method: string, url: string, data: any) => {
   var config = {
-    method: "get",
-    url: "http://localhost:5000/api/auth/all-users",
-    headers: {},
+    method: method,
+    url: `http://localhost:5000/api/task${url}`,
+    headers: {
+      Authorization: `Bearer ${userJWTToken}`,
+    },
+    data: data,
   };
-
   axios(config)
     .then(function (response) {
-      console.log(JSON.stringify(response.data));
+      if (response.data.code === "allTasksSuccess") {
+        store.allTasks = response.data.payload;
+      } else if (response.data.code === "pendingTasksSuccess") {
+        store.pendingTasks = response.data.payload;
+      } else if (response.data.code === "myTasksSuccess") {
+        store.myTasks = response.data.payload;
+      } 
 
-      console.log(response.data.payload)
+      console.log(data)
     })
     .catch(function (error) {
       console.log(error);
-    });
+    }); 
+
 };

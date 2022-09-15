@@ -11,6 +11,10 @@ const AllTasks: React.FC<ICreateTaskFormProps> = observer(() => {
 
   const { allTasks, getStatusAsString, getDepartmentAsString } = store;
 
+  React.useEffect(() => {
+    store.initilizesAllTasks();
+  }, [])
+
   return (
     <React.Fragment>
       <Table aria-label="table">
