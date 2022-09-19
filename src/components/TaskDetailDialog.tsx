@@ -8,6 +8,7 @@ interface ITaskDetailFormProps {
 }
 const TaskDetailDialog: React.FC<ITaskDetailFormProps> = observer(({ taskStore }) => {
   const { selectedTask, changeDetailPopupVisibility } = taskStore;
+  
   return (
     <Dialog
       open={taskStore.isDetailFormOpen}
@@ -18,7 +19,8 @@ const TaskDetailDialog: React.FC<ITaskDetailFormProps> = observer(({ taskStore }
       content={
         <TaskForm selectedTask={selectedTask!} isEditableForm={false} />
       }
-      header="See Detail"
+      header="Task's Detail"
+      className="task-detail-wrapper"
     />
   )
 });

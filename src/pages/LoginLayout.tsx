@@ -1,13 +1,11 @@
 import React from 'react'
 import { Outlet } from "react-router-dom";
 import { observer } from 'mobx-react-lite';
-import { ITaskModel } from '../models/tasks/TaskModel';
 
-interface ICreateTaskFormProps {
-    selectedTask?: ITaskModel
+interface ILoginLayoutProps {
 }
 
-const LoginLayout: React.FC<ICreateTaskFormProps> = observer(() => {
+const LoginLayout: React.FC<ILoginLayoutProps> = observer(() => {
     return (
         <div>
             <Outlet />

@@ -8,13 +8,14 @@ import MyTasks from './pages/tasks/MyTasks';
 import PendingTasks from './pages/tasks/PendingTasks';
 
 import Login from './pages/login/Login';
-import Deneme from './pages/tasks/Deneme';
+import NotFound from './pages/NotFound';
 import LoginLayout from './pages/LoginLayout';
 
-const App: React.FC = () => {
+interface IAppProps { }
 
-  const strCurrentUser = localStorage.getItem("user");
+const App: React.FC<IAppProps> = () => {
 
+  const strCurrentUser = localStorage.getItem("user")
 
   return strCurrentUser !== null ? (
     <BrowserRouter>
@@ -23,8 +24,8 @@ const App: React.FC = () => {
           <Route path='/' element={<Home />} />
           <Route path='/Alltasks' element={<Alltasks />} />
           <Route path='/MyTasks' element={<MyTasks />} />
-          <Route path='/Deneme' element={<Deneme />} />
           <Route path='/PendingTasks' element={<PendingTasks />} />
+          <Route path='*' element={<NotFound />} />
         </Route>
       </Routes>
     </BrowserRouter>
@@ -34,6 +35,7 @@ const App: React.FC = () => {
         <Routes>
           <Route element={<LoginLayout />} >
             <Route path='/Login' element={<Login />} />
+            <Route path='*' element={<NotFound />} />
           </Route>
         </Routes>
       </BrowserRouter>

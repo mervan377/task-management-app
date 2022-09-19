@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { AddIcon, Button, ExpandIcon, SettingsIcon, Table, tableHeaderCellBehavior, TrashCanIcon } from '@fluentui/react-northstar';
+import { Button, ExpandIcon, SettingsIcon, Table, tableHeaderCellBehavior, TrashCanIcon } from '@fluentui/react-northstar';
 
 import TaskDeleteDialog from '../../components/TaskDeleteDialog';
 import TaskDetailDialog from '../../components/TaskDetailDialog';
@@ -8,12 +8,14 @@ import WarningDialog from '../../components/WarningDailog'
 import { observer } from 'mobx-react-lite';
 import { ITaskModel } from '../../models/tasks/TaskModel';
 import { store } from './stores/TaskStore';
+import TaskCreateDialog from '../../components/TaskCreateDialog';
+import CreateButton from '../../components/CreateButton';
 
-interface ITaskDetailFormProps {
+interface IMyTasksProps {
   selectedTask?: ITaskModel
 }
 
-const MyTasks: React.FC<ITaskDetailFormProps> = observer(() => {
+const MyTasks: React.FC<IMyTasksProps> = observer(() => {
 
   const { myTasks, getStatusAsString, getDepartmentAsString } = store;
 
@@ -23,10 +25,7 @@ const MyTasks: React.FC<ITaskDetailFormProps> = observer(() => {
 
   return (
     <React.Fragment>
-      <Button content="Create Task" icon={<AddIcon />} iconPosition="after" onClick={() => {
-        store.initializeSelectedTask()
-        store.changeCreatePopupVisibility(true)
-      }} />
+      <CreateButton />
       <Table aria-label="table" >
         <Table.Row header className='table-header'>
           <Table.Cell content="Title" accessibility={tableHeaderCellBehavior} />
@@ -63,6 +62,7 @@ const MyTasks: React.FC<ITaskDetailFormProps> = observer(() => {
       </Table>
 
       <WarningDialog />
+      <TaskCreateDialog taskStore={store} />
       <TaskDeleteDialog taskStore={store} />
       <TaskUpdateDialog taskStore={store} />
       <TaskDetailDialog taskStore={store} />

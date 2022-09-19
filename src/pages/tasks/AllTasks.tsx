@@ -1,13 +1,14 @@
 import * as React from 'react';
-import { AddIcon, Button, ExpandIcon, Table, tableHeaderCellBehavior } from '@fluentui/react-northstar';
+import { Button, ExpandIcon, Table, tableHeaderCellBehavior } from '@fluentui/react-northstar';
 import { store } from './stores/TaskStore';
 import TaskDetailDialog from '../../components/TaskDetailDialog';
 import { observer } from 'mobx-react-lite';
+import TaskCreateDialog from '../../components/TaskCreateDialog';
+import CreateButton from '../../components/CreateButton';
 
-interface ICreateTaskFormProps {
-}
+interface IAllTasksProps {}
 
-const AllTasks: React.FC<ICreateTaskFormProps> = observer(() => {
+const AllTasks: React.FC<IAllTasksProps> = observer(() => {
 
   const { allTasks, getStatusAsString, getDepartmentAsString } = store;
 
@@ -17,10 +18,9 @@ const AllTasks: React.FC<ICreateTaskFormProps> = observer(() => {
 
   return (
     <React.Fragment>
-      <Button content="Create Task" icon={<AddIcon />} iconPosition="after" onClick={() => {
-        store.initializeSelectedTask()
-        store.changeCreatePopupVisibility(true)
-      }} />
+
+      <CreateButton />
+
       <Table aria-label="table">
         <Table.Row header className='table-header'>
           <Table.Cell content="Title" accessibility={tableHeaderCellBehavior} />
@@ -45,6 +45,7 @@ const AllTasks: React.FC<ICreateTaskFormProps> = observer(() => {
         })
         }
       </Table>
+      <TaskCreateDialog taskStore={store} />
       <TaskDetailDialog taskStore={store} />
     </React.Fragment>
   )

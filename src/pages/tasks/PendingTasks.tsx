@@ -1,35 +1,23 @@
 import * as React from 'react';
-import { AddIcon, Button, Dropdown, ExpandIcon, Table, tableHeaderCellBehavior } from '@fluentui/react-northstar';
+import { Button, ExpandIcon, Table, tableHeaderCellBehavior } from '@fluentui/react-northstar';
 
 import TaskDetailDialog from '../../components/TaskDetailDialog';
+import TaskCreateDialog from '../../components/TaskCreateDialog';
+import CreateButton from '../../components/CreateButton';
 import { observer } from 'mobx-react-lite';
 import { store } from './stores/TaskStore';
-import AreYouSure from '../../components/AreYouSure';
-
-const inputItems = [
-  'Reject',
-  'Complete'
-];
-
-interface IPendingTaskFormProps {
-}
-
-const PendingTasks: React.FC<IPendingTaskFormProps> = observer(() => {
-
-  const { pendingTasks, getDepartmentAsString, changeStatusModalOpen, setSelectedTask, changeDetailPopupVisibility, getStatusAsString, isDeleteFormOpen, isUpdateFormOpen, isStatusModalOpen, changeAreYouSurePopupVisibility } = store;
 
 
+interface IPendingTasksProps { }
+
+const PendingTasks: React.FC<IPendingTasksProps> = observer(() => {
+  const { pendingTasks, getDepartmentAsString, setSelectedTask, changeDetailPopupVisibility, getStatusAsString } = store;
   React.useEffect(() => {
     store.initializesPendingTasks();
   }, [])
-
-
   return (
     <React.Fragment>
-      <Button content="Create Task" icon={<AddIcon />} iconPosition="after" onClick={() => {
-        store.initializeSelectedTask()
-        store.changeCreatePopupVisibility(true)
-      }} />
+      <CreateButton />
       <Table aria-label="table">
         <Table.Row header className='table-header'>
           <Table.Cell content="Title" accessibility={tableHeaderCellBehavior} />
@@ -48,23 +36,25 @@ const PendingTasks: React.FC<IPendingTaskFormProps> = observer(() => {
                 setSelectedTask(task)
                 changeDetailPopupVisibility(true)
               }} />} />
-              <Table.Cell content={<Dropdown fluid
-                items={inputItems}
-                checkable
-                value={getStatusAsString(task.status)}
-                onChange={(e, selectedOption) => {
-                  setSelectedTask(task);
-                  changeAreYouSurePopupVisibility(true)
-                  changeStatusModalOpen(selectedOption.value)
-                }}
-              />} />
+              <Table.Cell content={ getStatusAsString(task.status)
+              // <Dropdown fluid
+              //   items={inputItems}
+              //   checkable
+              //   value={getStatusAsString(task.status)}
+              //   onChange={(e, selectedOption) => {
+              //     setSelectedTask(task);
+              //     changeAreYouSurePopupVisibility(true)
+              //     changeStatusModalOpen(selectedOption.value)
+              //   }}
+              // />
+            }/>
             </Table.Row>
           )
         })
         }
       </Table>
 
-      <AreYouSure taskStore={store} isUpdate={isUpdateFormOpen} isDelete={isDeleteFormOpen} isStatus={isStatusModalOpen} />
+      <TaskCreateDialog taskStore={store} />
       <TaskDetailDialog taskStore={store} />
     </React.Fragment>
 

@@ -1,10 +1,10 @@
 import React from 'react'
 import { Flex, Form, Input, FormField, FormLabel, FormTextArea, FormDropdown } from '@fluentui/react-northstar';
-import { observer } from 'mobx-react'; 
+import { observer } from 'mobx-react';
 import { store } from '../pages/tasks/stores/TaskStore';
 import { ITaskModel } from '../models/tasks/TaskModel';
 
-interface ITaskDetailFormProps {
+interface ITaskFormProps {
     selectedTask?: ITaskModel,
     isEditableForm: boolean
 }
@@ -15,8 +15,10 @@ const departmentItems = [
     'Advertsement Department'
 ]
 
-const TaskDetailForm: React.FC<ITaskDetailFormProps> = observer(({ selectedTask, isEditableForm }) => {
+const TaskDetailForm: React.FC<ITaskFormProps> = observer(({ selectedTask, isEditableForm }) => {
     const { getDepartmentAsString } = store;
+
+
 
     return (
         <Flex gap="gap.small">

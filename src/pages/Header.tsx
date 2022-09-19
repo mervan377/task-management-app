@@ -2,10 +2,12 @@ import { Menu, Button } from '@fluentui/react-northstar'
 import { LeaveIcon } from '@fluentui/react-icons-northstar';
 import "../App.css"
 import { useNavigate } from 'react-router-dom'
-import { authStore } from './login/stores/authStore'; 
+import { authStore } from './login/stores/authStore';
+import { observer } from 'mobx-react-lite';
 
+interface IHeaderProps { }
 
-function Header() {
+const Header: React.FC<IHeaderProps> = observer(() => {
 
   const { logout } = authStore
   const navigate = useNavigate();
@@ -22,7 +24,7 @@ function Header() {
           {
             content: "Home",
             key: 'Home',
-            onClick: () => navigate("/"), 
+            onClick: () => navigate("/"),
           },
           {
             content: 'All Tasks',
@@ -48,6 +50,6 @@ function Header() {
 
     </div>
   )
-}
+})
 
 export default Header

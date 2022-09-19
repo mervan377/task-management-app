@@ -70,11 +70,15 @@ export class TaskStore {
   };
 
   @action
-  changeStatusTask = (statusName: any): void => {
-    const currentSelectedID = this.selectedTask?.id;
-    statusName = statusName.toString().toLowerCase();
-    getTasks("get", `/${statusName}/${currentSelectedID}`, "");
-    this.initalizesTaskList();
+  changeStatusTask = (statusName: string): void => {
+    statusName = statusName.toString().toLowerCase(); 
+    if (this.selectedTask?.status === 0) {
+      const currentSelectedID = this.selectedTask?.id;
+      getTasks("get", `/${statusName}/${currentSelectedID}`, "");
+      this.initalizesTaskList();
+    } else {
+      this.changeWarningOpenModal(true);
+    }
   };
 
   /* Initilazie My Tasks */
@@ -149,14 +153,6 @@ export class TaskStore {
   @action
   changeDeletePopupVisibility = (isOpen: boolean): void => {
     this.isDeleteFormOpen = isOpen;
-  };
-
-  /*  Are You Sure Form Open  */
-  @observable
-  isAreYouSureFormOpen: boolean = false;
-  @action
-  changeAreYouSurePopupVisibility = (isOpen: boolean): void => {
-    this.isAreYouSureFormOpen = isOpen;
   };
 
   /*  Status   */

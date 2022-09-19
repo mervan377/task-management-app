@@ -1,13 +1,14 @@
 import { Breadcrumb, ChevronEndIcon } from '@fluentui/react-northstar';
-import { useLocation } from 'react-router-dom'; 
+import { observer } from 'mobx-react';
+import { useLocation } from 'react-router-dom';
 
 
-function BreadcrumbTop() {
+interface IBreadcrumbProps { }
+
+const BreadcrumbTop: React.FC<IBreadcrumbProps> = observer(() => {
 
     const location = useLocation();
     let currentLocation: string = location.pathname.replace('/', '')
-
-    
 
     return (
         <>
@@ -25,6 +26,6 @@ function BreadcrumbTop() {
 
         </ >
     )
-}
+})
 
 export default BreadcrumbTop

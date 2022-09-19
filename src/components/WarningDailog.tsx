@@ -7,7 +7,7 @@ import { store } from '../pages/tasks/stores/TaskStore';
 interface IWarningFormProps {
 }
 
-const AreYouSure: React.FC<IWarningFormProps> = observer(() => {
+const WarningDialog: React.FC<IWarningFormProps> = observer(() => {
     const { isWarningOpenModal, changeWarningOpenModal } = store;
     return (
         <Dialog
@@ -19,7 +19,7 @@ const AreYouSure: React.FC<IWarningFormProps> = observer(() => {
             content={
                 "You can not delete or update this task because this task completed or rejected"
             }
-            header="Comfirming"
+            header=""
         />
     )
 
@@ -27,4 +27,4 @@ const AreYouSure: React.FC<IWarningFormProps> = observer(() => {
 
 
 
-export default AreYouSure;
+export default WarningDialog;

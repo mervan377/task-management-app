@@ -1,9 +1,7 @@
 import * as React from 'react';
 import { Dialog } from '@fluentui/react-northstar';
 import { observer } from 'mobx-react-lite';
-import TaskForm from './TaskForm';
 import { TaskStore } from '../pages/tasks/stores/TaskStore';
-import AreYouSure from './AreYouSure';
 
 interface ITaskDeleteFormProps {
     taskStore: TaskStore
@@ -11,7 +9,7 @@ interface ITaskDeleteFormProps {
 
 const TaskDeleteDialog: React.FC<ITaskDeleteFormProps> = observer(({ taskStore }) => {
 
-    const { selectedTask, changeDeletePopupVisibility, changeAreYouSurePopupVisibility, isDeleteFormOpen, isUpdateFormOpen, isStatusModalOpen } = taskStore;
+    const { changeDeletePopupVisibility, deleteSelectedTaskFromList } = taskStore;
 
     return (
         <>
@@ -23,15 +21,15 @@ const TaskDeleteDialog: React.FC<ITaskDeleteFormProps> = observer(({ taskStore }
                 }}
                 confirmButton="Delete"
                 onConfirm={() => {
-                    changeAreYouSurePopupVisibility(true)
-
+                    deleteSelectedTaskFromList()
                 }}
                 content={
-                    <TaskForm selectedTask={selectedTask!} isEditableForm={false} />
+                    `${taskStore.selectedTask?.description}`
                 }
-                header="Delete task"
+                header={
+                    `Are you sure you want to delete the task titled ${taskStore.selectedTask?.title} ?`
+                }
             />
-            <AreYouSure taskStore={taskStore} isUpdate={isUpdateFormOpen} isDelete={isDeleteFormOpen} isStatus={isStatusModalOpen} />
         </>
     )
 });
