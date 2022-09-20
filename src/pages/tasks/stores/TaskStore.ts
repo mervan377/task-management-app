@@ -3,6 +3,7 @@ import {
   Departments,
   ITaskModel,
   TaskStatus,
+  TaskUrls,
 } from "../../../models/tasks/TaskModel";
 import { getTasks, setTasks } from "../../../api/api";
 
@@ -32,6 +33,8 @@ export class TaskStore {
     });
     setTasks("post", "/", `${data}`);
     this.initalizesTaskList();
+    store.changeTaskSuccessOrNotPopup(true, "taskCreated");
+    store.changeTaskAddOrUpdated(true)
     this.isCreateFormOpen = false;
   };
 
@@ -49,8 +52,10 @@ export class TaskStore {
     if (this.selectedTask?.status === 0) {
       setTasks("put", `/${currentSelectedID}`, `${data}`);
       this.initalizesTaskList();
+      store.changeTaskSuccessOrNotPopup(true, "taskUpdated");
+      store.changeTaskAddOrUpdated(true) 
     } else {
-      this.changeWarningOpenModal(true);
+      this.changeTaskWarningOpenModal(true);
     }
 
     this.isUpdateFormOpen = false;
@@ -63,21 +68,22 @@ export class TaskStore {
       const currentSelectedID = this.selectedTask?.id;
       getTasks("delete", `/${currentSelectedID}`, "");
       this.initalizesTaskList();
+      store.changeTaskSuccessOrNotPopup(true, "taskDeleted");
     } else {
-      this.changeWarningOpenModal(true);
+      this.changeTaskWarningOpenModal(true);
     }
     this.isDeleteFormOpen = false;
   };
 
   @action
   changeStatusTask = (statusName: string): void => {
-    statusName = statusName.toString().toLowerCase(); 
+    statusName = statusName.toString().toLowerCase();
     if (this.selectedTask?.status === 0) {
       const currentSelectedID = this.selectedTask?.id;
       getTasks("get", `/${statusName}/${currentSelectedID}`, "");
       this.initalizesTaskList();
     } else {
-      this.changeWarningOpenModal(true);
+      this.changeTaskWarningOpenModal(true);
     }
   };
 
@@ -123,6 +129,14 @@ export class TaskStore {
     };
   };
 
+  /*  Pending Detail Form Open  */
+  @observable
+  isPendingFormOpen: boolean = false;
+  @action
+  changePendingPopupVisibility = (isOpen: boolean): void => {
+    this.isPendingFormOpen = isOpen;
+  };
+
   /*  Detail Form Open  */
   @observable
   isDetailFormOpen: boolean = false;
@@ -165,10 +179,43 @@ export class TaskStore {
 
   /*  Warning Modal Open Close   */
   @observable
-  isWarningOpenModal: boolean = false;
+  isTaskWarningOpenModal: boolean = false;
   @action
-  changeWarningOpenModal = (isOpen: boolean): void => {
-    this.isWarningOpenModal = isOpen;
+  changeTaskWarningOpenModal = (isOpen: boolean): void => {
+    this.isTaskWarningOpenModal = isOpen;
+  };
+
+  /*  Warning Modal Open Close   */
+  @observable
+  isLogoutWarningOpenModal: boolean = false;
+  @action
+  changeLogoutWarningOpenModal = (isOpen: boolean): void => {
+    this.isLogoutWarningOpenModal = isOpen;
+  };
+
+  /*  Warning Modal Open Close   */
+  @observable
+  isTaskSuccessOrNotPopup: boolean = false;
+  @observable
+  isActionType: string = ""
+  @action
+  changeTaskSuccessOrNotPopup = (isOpen: boolean, isType: string): void => {
+    this.isTaskSuccessOrNotPopup = isOpen;
+    this.isActionType = isType
+    setTimeout(function () {
+      store.isTaskSuccessOrNotPopup = false;
+    }, 3000);
+  };
+
+  /*  Task Add or Updated for doing background success   */
+  @observable
+  isTaskAddOrUpdated: boolean = false;
+  @action
+  changeTaskAddOrUpdated = (isOpen: boolean): void => {
+    this.isTaskAddOrUpdated = isOpen;
+    setTimeout(function () {
+      store.isTaskAddOrUpdated = false;
+    }, 3000);
   };
 
   /* ******************************************* */
@@ -202,6 +249,36 @@ export class TaskStore {
         return "Sales Deparment";
       case Departments.Marketing:
         return "Advertisement Deparment";
+      default:
+        return "Error";
+    }
+  };
+
+  getURLAsString = (status: TaskUrls): string => {
+    switch (status) {
+      case TaskUrls.Home:
+        return "/";
+      case TaskUrls.AllTasks:
+        return "/all-tasks";
+      case TaskUrls.MyTasks:
+        return "/my-tasks";
+      case TaskUrls.PendingTasks:
+        return "/pending-tasks";
+      case TaskUrls.NotFound:
+        return "*";
+      default:
+        return "Error";
+    }
+  };
+
+  getTaskActionTypes = (actionType: string): string => {
+    switch (actionType) {
+      case "taskCreated":
+        return "Task Create Successfully";
+      case "taskDeleted":
+        return "Task Deleted Successfully";
+      case "taskUpdated":
+        return "Task Updated Successfully";
       default:
         return "Error";
     }

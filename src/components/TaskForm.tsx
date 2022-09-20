@@ -27,32 +27,66 @@ const TaskDetailForm: React.FC<ITaskFormProps> = observer(({ selectedTask, isEdi
             }}>
                 <Form>
                     <FormField >
-                        <FormLabel htmlFor="title" id="first-name-label">
-                            Title
-                        </FormLabel>
-                        <Input name="first-name" fluid aria-labelledby="first-name-label message-id" id="title" disabled={!isEditableForm}
-                            value={selectedTask!.title}
-                            onChange={(e) => {
-                                const value = (e.target as any).value;
-                                selectedTask!.title = value
-                            }}
-                        />
+                        {
+                            !isEditableForm ? (
+                                selectedTask?.title
+                            ) : (
+                                <>
+                                    <FormLabel htmlFor="title" id="first-name-label">
+                                        Title
+                                    </FormLabel>
+                                    <Input name="first-name" fluid aria-labelledby="first-name-label message-id" id="title" disabled={!isEditableForm}
+                                        value={selectedTask!.title}
+                                        onChange={(e) => {
+                                            const value = (e.target as any).value;
+                                            selectedTask!.title = value
+                                        }}
+                                    />
+                                </>
+                            )
+                        }
                     </FormField>
-                    <FormTextArea name="desc" id="desc" label="Description" fluid resize='both' disabled={!isEditableForm} value={selectedTask!.description}
-                        onChange={(e) => {
-                            const value = (e.target as any).value;
-                            selectedTask!.description = value
-                        }}
-                    />
                     <FormField>
-                        <FormDropdown placeholder="Select assisgment department" disabled={!isEditableForm} fluid
-                            items={departmentItems}
-                            checkable
-                            value={getDepartmentAsString(selectedTask!.assignedDepartment)}
-                            onChange={(e, selectedOption) => {
-                                (selectedTask!.assignedDepartment) = Number(selectedOption.highlightedIndex) + 1
-                            }}
-                        />
+                        {
+                            !isEditableForm ? (
+                                selectedTask!.description
+                            ) : (
+                                <>
+                                    <FormLabel htmlFor="title" id="first-name-label">
+                                        Description
+                                    </FormLabel>
+                                    <FormTextArea name="desc" id="desc" fluid resize='both' disabled={!isEditableForm} value={selectedTask!.description}
+                                        onChange={(e) => {
+                                            const value = (e.target as any).value;
+                                            selectedTask!.description = value
+                                        }}
+                                    />
+                                </>
+                            )
+                        }
+                    </FormField>
+                    <FormField>
+
+                        {
+                            !isEditableForm ? (
+                                getDepartmentAsString(selectedTask!.assignedDepartment)
+                            ) : (
+                                <>
+                                    <FormLabel htmlFor="title" id="first-name-label">
+                                        Select assisgment department
+                                    </FormLabel>
+                                    <FormDropdown placeholder="Select assisgment department" disabled={!isEditableForm} fluid
+                                        items={departmentItems}
+                                        checkable
+                                        value={getDepartmentAsString(selectedTask!.assignedDepartment)}
+                                        onChange={(e, selectedOption) => {
+                                            (selectedTask!.assignedDepartment) = Number(selectedOption.highlightedIndex) + 1
+                                        }}
+                                    />
+                                </>
+                            )
+                        }
+
                     </FormField>
                 </Form>
             </Flex>

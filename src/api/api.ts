@@ -38,7 +38,18 @@ export const setTasks = (method: string, url: string, data: string) => {
     },
     data: data,
   };
-  axios(config);
+
+  axios(config)
+    .then(function (response) {
+      // if (response.data.code === "taskCreated") {
+      //   store.changeTaskCRUDSuccessOrNotPopup(true, "taskCreated");
+      // } else if (response.data.code === "taskUpdated") {
+      //   store.changeTaskCRUDSuccessOrNotPopup(true, "taskUpdated");
+      // }
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
 };
 
 export const setAuth = (method: string, url: string, data: ILoginModel) => {
@@ -52,6 +63,9 @@ export const setAuth = (method: string, url: string, data: ILoginModel) => {
     .then(function (response) {
       localStorage.setItem("user", JSON.stringify(response.data.payload));
       window.location.href = "/";
+    })
+    .then(function () {
+      store.changeDetailPopupVisibility(true);
     })
     .catch(function (error) {
       console.log(error);

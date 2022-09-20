@@ -7,33 +7,34 @@ interface ITaskDetailFormProps {
   taskStore: TaskStore
 }
 const TaskDetailDialog: React.FC<ITaskDetailFormProps> = observer(({ taskStore }) => {
-  const { selectedTask, changeDetailPopupVisibility, changeStatusTask } = taskStore;
-  const userID = JSON.parse(localStorage.getItem("user") || "").department
+  const { selectedTask, changePendingPopupVisibility: changePendingDetailPopupVisibility, changeStatusTask } = taskStore;
   return (
     <Dialog
-      open={taskStore.isDetailFormOpen}
+      open={taskStore.isPendingFormOpen}
       cancelButton="Close"
       onCancel={() => {
-        changeDetailPopupVisibility(false)
+        changePendingDetailPopupVisibility(false)
       }}
       confirmButton={
         <>
           <Button
-            style={{ backgroundColor: "#237B4B", color: "white" }}
-            onClick={() => { changeStatusTask("Complete"); changeDetailPopupVisibility(false) }}
-            disabled={userID !== selectedTask?.user.id}> Complete </Button>
-
-          <Button
             style={{ backgroundColor: "#8E192E", color: "white" }}
-            onClick={() => { changeStatusTask("Reject"); changeDetailPopupVisibility(false) }}
-            disabled={userID !== selectedTask?.user.id}
-          > Reject </Button>
+            onClick={() => {
+              changePendingDetailPopupVisibility(false)
+              changeStatusTask("Reject")
+            }}> Reject </Button>
+          <Button
+            style={{ backgroundColor: "#237B4B", color: "white" }}
+            onClick={() => {
+              taskStore.changeStatusTask("Complete")
+              changePendingDetailPopupVisibility(false)
+            }}> Complete </Button>
         </>
       }
       content={
         <TaskForm selectedTask={selectedTask!} isEditableForm={false} />
       }
-      header="Task's Detail"
+      header="Task Confirmation"
       className="task-detail-wrapper"
     />
   )

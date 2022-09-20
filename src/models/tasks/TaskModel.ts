@@ -30,3 +30,11 @@ export enum Departments {
   Sales = 2,
   Marketing = 3,
 }
+
+export enum TaskUrls {
+  Home,
+  AllTasks,
+  MyTasks,
+  PendingTasks,
+  NotFound,
+}

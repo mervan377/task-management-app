@@ -22,7 +22,7 @@ const TaskCreateDialog: React.FC<ICreateTaskProps> = observer(({ taskStore }) =>
             content={
                 <TaskForm selectedTask={selectedTask!} isEditableForm={true} />
             }
-            header="Create New Task Form"
+            header="Create New Task"
         />
     )
 });

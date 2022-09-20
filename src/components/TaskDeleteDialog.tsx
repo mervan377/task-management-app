@@ -24,11 +24,9 @@ const TaskDeleteDialog: React.FC<ITaskDeleteFormProps> = observer(({ taskStore }
                     deleteSelectedTaskFromList()
                 }}
                 content={
-                    `${taskStore.selectedTask?.description}`
+                    `${taskStore.selectedTask?.title}`
                 }
-                header={
-                    `Are you sure you want to delete the task titled ${taskStore.selectedTask?.title} ?`
-                }
+                header="Delete this task?"
             />
         </>
     )

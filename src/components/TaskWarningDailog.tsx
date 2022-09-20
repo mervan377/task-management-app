@@ -7,8 +7,8 @@ import { store } from '../pages/tasks/stores/TaskStore';
 interface IWarningFormProps {
 }
 
-const WarningDialog: React.FC<IWarningFormProps> = observer(() => {
-    const { isWarningOpenModal, changeWarningOpenModal } = store;
+const TaskWarningDailog: React.FC<IWarningFormProps> = observer(() => {
+    const { isTaskWarningOpenModal: isWarningOpenModal, changeTaskWarningOpenModal: changeWarningOpenModal } = store;
     return (
         <Dialog
             open={isWarningOpenModal}
@@ -19,7 +19,7 @@ const WarningDialog: React.FC<IWarningFormProps> = observer(() => {
             content={
                 "You can not delete or update this task because this task completed or rejected"
             }
-            header=""
+            header="Permission Denied"
         />
     )
 
@@ -27,4 +27,4 @@ const WarningDialog: React.FC<IWarningFormProps> = observer(() => {
 
 
 
-export default WarningDialog;
+export default TaskWarningDailog;

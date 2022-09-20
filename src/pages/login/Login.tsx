@@ -15,7 +15,9 @@ const Login: React.FC<ILoginFormProps> = observer(() => {
           <div className="log-header">
             <img src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQI1OjKY1KKU5K4Yym9v7bJbBQoJuskcHgx8A&usqp=CAU' className='logo' alt='' />
           </div>
-            <p>Task Management System for your daily stuff</p>
+          {/* <p>Task Management System for your daily stuff</p> */}
+
+          <h2>User Login </h2>
           <Form
             onSubmit={() => {
               authStore.login()
@@ -25,7 +27,7 @@ const Login: React.FC<ILoginFormProps> = observer(() => {
               name="email"
               id="email"
               type='email'
-              label="Enter Email*"
+              label="Email*"
               placeholder='write your email'
               value={authStore.loginModel.email}
               fluid
@@ -39,7 +41,7 @@ const Login: React.FC<ILoginFormProps> = observer(() => {
               name="password"
               id="password"
               type="password"
-              label="Enter Password*"
+              label="Password*"
               style={{ color: "#bbb" }}
               placeholder='write your password'
               fluid

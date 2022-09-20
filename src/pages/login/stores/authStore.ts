@@ -2,6 +2,7 @@ import { action, makeObservable, observable, toJS } from "mobx";
 import { setAuth } from "../../../api/api";
 import { Departments, ILoginModel } from "../../../models/login/LoginModel";
 
+
 export class AuthStore {
   constructor() {
     makeObservable(this);
@@ -24,8 +25,8 @@ export class AuthStore {
   /* Logout user */
   @action
   logout = (): void => {
-    localStorage.removeItem("user");
-    window.location.href = "/Login";
+
+
   };
 
   getDepartmentAsString = (status: Departments): string => {

@@ -22,7 +22,7 @@ const NotFound: React.FC<INotFoundProps> = observer(() => {
         </React.Fragment>
     ) : (
         <React.Fragment>
-            <h1>Nothing could not found</h1> 
+            <h1>Nothing could not found</h1>
             <Button icon iconPosition="before" primary>
                 <ContactGroupIcon xSpacing="after" />
                 <Button.Content content="Homepage" onClick={() => {

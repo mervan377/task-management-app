@@ -19,8 +19,8 @@ const TaskDetailDialog: React.FC<ITaskDetailFormProps> = observer(({ taskStore }
       content={
         <TaskForm selectedTask={selectedTask!} isEditableForm={false} />
       }
-      header="Task's Detail"
-      className="task-detail-wrapper"
+      header="Task Detail"
+      
     />
   )
 });

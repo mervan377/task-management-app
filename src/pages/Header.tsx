@@ -2,18 +2,21 @@ import { Menu, Button } from '@fluentui/react-northstar'
 import { LeaveIcon } from '@fluentui/react-icons-northstar';
 import "../App.css"
 import { useNavigate } from 'react-router-dom'
-import { authStore } from './login/stores/authStore';
+import { store } from "./tasks/stores/TaskStore"
 import { observer } from 'mobx-react-lite';
+import LogoutWarningDailog from '../components/LogoutWarningDailog'
+import React from 'react';
 
 interface IHeaderProps { }
 
 const Header: React.FC<IHeaderProps> = observer(() => {
 
-  const { logout } = authStore
   const navigate = useNavigate();
 
+  const { changeLogoutWarningOpenModal } = store
+
   return (
-    <div>
+    <React.Fragment>
       <Menu
         items={[
           {
@@ -29,26 +32,49 @@ const Header: React.FC<IHeaderProps> = observer(() => {
           {
             content: 'All Tasks',
             key: 'AllTasks',
-            onClick: () => navigate("/AllTasks")
+            onClick: () => navigate("/all-tasks")
           },
           {
             content: "My Tasks",
             key: 'MyTasks',
-            onClick: () => navigate("/MyTasks")
+            onClick: () => navigate("/my-tasks")
           },
           {
             content: "Pending Tasks",
             key: 'PendingTasks',
-            onClick: () => navigate("/PendingTasks")
-          },
-          {
-            content: <Button content="Logout" onClick={logout} icon={<LeaveIcon />} />,
-            key: 'logout'
+            onClick: () => navigate("/pending-tasks")
           }
         ]}
       />
 
-    </div>
+      <div style={{ position: "absolute", top: "1rem", right: "2rem" }}>
+        <span className='welcome-user'>
+          Welcome {`${JSON.parse(localStorage.getItem("user") || "").name}`}
+        </span>
+        <Button content="Logout" onClick={() => {
+          changeLogoutWarningOpenModal(true)
+        }} icon={<LeaveIcon />} />
+      </div>
+
+      <LogoutWarningDailog />
+
+      {
+        store.isTaskSuccessOrNotPopup ? (
+          <>
+            <div className="message-container">
+              <div className={`message-response message-animate`}>
+                {
+                  store.getTaskActionTypes(store.isActionType)
+                }
+              </div>
+            </div>
+          </>
+        ) : (
+          ""
+        )
+      }
+
+    </React.Fragment>
   )
 })
 

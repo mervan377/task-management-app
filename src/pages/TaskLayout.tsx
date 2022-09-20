@@ -8,15 +8,15 @@ interface ITaskLayoutFormProps { }
 
 const TasksLayout: React.FC<ITaskLayoutFormProps> = observer(() => {
     return (
-        <div>
+        <React.Fragment>
             <Header />
             <div className='container'>
                 <div className="container-content">
-                    <BreadcrumbTop /> 
+                    <BreadcrumbTop />
                     <Outlet />
                 </div>
             </div>
-        </div>
+        </React.Fragment>
     )
 })
 

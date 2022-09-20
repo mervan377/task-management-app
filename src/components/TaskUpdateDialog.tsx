@@ -25,7 +25,7 @@ const TaskUpdateDialog: React.FC<ITaskUpdateFormProps> = observer(({ taskStore }
         content={
           <TaskForm selectedTask={selectedTask!} isEditableForm={true} />
         }
-        header="Update"
+        header="Update Task"
       />
     </>
   )

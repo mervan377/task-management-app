@@ -1,30 +1,37 @@
 import { Breadcrumb, ChevronEndIcon } from '@fluentui/react-northstar';
 import { observer } from 'mobx-react';
-import { useLocation } from 'react-router-dom';
+import React from 'react';
+import { Link, useLocation } from 'react-router-dom';
 
 
 interface IBreadcrumbProps { }
 
 const BreadcrumbTop: React.FC<IBreadcrumbProps> = observer(() => {
 
+
     const location = useLocation();
-    let currentLocation: string = location.pathname.replace('/', '')
+    let currentLocation: string = location.pathname.replace('-', ' ').replace('/', '')
 
     return (
-        <>
+        <React.Fragment>
             <Breadcrumb aria-label="breadcrumb" className='breadcrumb_header'>
                 <Breadcrumb.Item>
-                    <Breadcrumb.Link href="/">Home</Breadcrumb.Link>
+                    <Link to="/">Home</Link>
                 </Breadcrumb.Item>
-                <Breadcrumb.Divider>
-                    <ChevronEndIcon />
-                </Breadcrumb.Divider>
+                {
+                    currentLocation ? (
+                        <Breadcrumb.Divider>
+                            <ChevronEndIcon />
+                        </Breadcrumb.Divider>
+                    ) : (
+                        ""
+                    )
+                }
                 <Breadcrumb.Item>
-                    <Breadcrumb.Link >{currentLocation}</Breadcrumb.Link>
+                    <Link to={currentLocation}>{currentLocation}</Link>
                 </Breadcrumb.Item>
             </Breadcrumb>
-
-        </ >
+        </React.Fragment>
     )
 })
 
