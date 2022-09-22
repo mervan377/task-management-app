@@ -92,12 +92,13 @@ export class TaskStore {
         config
       )
       .then(function (response) {
+        store.isUpdateFormOpen = false;
+        store.hideLoading();
         store.initializesMyTasks();
         store.changeTaskSuccessOrNotPopup(true, "taskUpdated");
         store.changeIsTaskUpdated(true);
-        store.isUpdateFormOpen = false;
+        
         store.isTaskEditedID = store.selectedTask?.id;
-        store.hideLoading();
       })
       .catch(function (error) {
         console.log(error);
@@ -300,11 +301,9 @@ export class TaskStore {
   changeTaskSuccessOrNotPopup = (isOpen: boolean, isType: string): void => {
     this.isTaskSuccessOrNotPopup = isOpen;
     this.isActionType = isType;
-    const timeSuc = setTimeout(function () {
+    const setIntervalSet = setInterval(function () {
       store.isTaskSuccessOrNotPopup = false;
     }, this.Interval);
-
-    clearInterval(timeSuc)
   };
 
   /*  Task Add or Updated for doing background success   */
@@ -313,7 +312,7 @@ export class TaskStore {
   @action
   changeIsTaskUpdated = (isOpen: boolean): void => {
     this.isTaskUpdated = isOpen;
-    setTimeout(function () {
+    setInterval(function () {
       store.isTaskUpdated = false;
     }, this.Interval);
   };
@@ -324,7 +323,7 @@ export class TaskStore {
   @action
   changeTaskAdd = (isOpen: boolean): void => {
     this.isTaskAdd = isOpen;
-    setTimeout(function () {
+    setInterval(function () {
       store.isTaskAdd = false;
     }, this.Interval);
   };
