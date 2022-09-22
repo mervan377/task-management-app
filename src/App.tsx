@@ -17,9 +17,6 @@ import { store } from './pages/tasks/stores/TaskStore';
 interface IAppProps {}
 
 const App: React.FC<IAppProps> = observer(() => {
-
-  console.log(store.getURLAsString(TaskUrls.AllTasks))
-
   const strCurrentUser = localStorage.getItem("user")
 
   return strCurrentUser !== null ? (

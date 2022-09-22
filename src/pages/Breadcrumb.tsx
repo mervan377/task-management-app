@@ -3,9 +3,7 @@ import { observer } from 'mobx-react';
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
-
 interface IBreadcrumbProps { }
-
 const BreadcrumbTop: React.FC<IBreadcrumbProps> = observer(() => {
 
 
@@ -16,7 +14,7 @@ const BreadcrumbTop: React.FC<IBreadcrumbProps> = observer(() => {
         <React.Fragment>
             <Breadcrumb aria-label="breadcrumb" className='breadcrumb_header'>
                 <Breadcrumb.Item>
-                    <Link to="/">Home</Link>
+                    <Link to="/" >Home</Link>
                 </Breadcrumb.Item>
                 {
                     currentLocation ? (
@@ -28,7 +26,7 @@ const BreadcrumbTop: React.FC<IBreadcrumbProps> = observer(() => {
                     )
                 }
                 <Breadcrumb.Item>
-                    <Link to={currentLocation}>{currentLocation}</Link>
+                    <div className="current-location" style={{textTransform: "capitalize"}}>{currentLocation}</div>
                 </Breadcrumb.Item>
             </Breadcrumb>
         </React.Fragment>

@@ -1,10 +1,9 @@
 import * as React from 'react';
-import { Button, EditIcon, Table, tableHeaderCellBehavior, TrashCanIcon, ZoomInIcon } from '@fluentui/react-northstar';
+import { Button, EditIcon, Loader, Table, tableHeaderCellBehavior, TrashCanIcon, ZoomInIcon } from '@fluentui/react-northstar';
 
 import TaskDeleteDialog from '../../components/TaskDeleteDialog';
 import TaskDetailDialog from '../../components/TaskDetailDialog';
-import TaskUpdateDialog from '../../components/TaskUpdateDialog';
-import TaskWarningDailog from '../../components/TaskWarningDailog'
+import TaskUpdateDialog from '../../components/TaskUpdateDialog'; 
 import { observer } from 'mobx-react-lite';
 import { ITaskModel } from '../../models/tasks/TaskModel';
 import { store } from './stores/TaskStore';
@@ -17,11 +16,13 @@ interface IMyTasksProps {
 
 const MyTasks: React.FC<IMyTasksProps> = observer(() => {
 
-  const { myTasks, getStatusAsString, getDepartmentAsString } = store;
+  const { myTasks, isLoading, getStatusAsString, getDepartmentAsString } = store;
 
   React.useEffect(() => {
     store.initializesMyTasks();
   }, [])
+
+  if(isLoading) return <div><Loader size="largest" label="Loading datas" labelPosition="below" /></div>
 
   return (
     <React.Fragment>
@@ -38,11 +39,10 @@ const MyTasks: React.FC<IMyTasksProps> = observer(() => {
         {
           myTasks.length ? (
             <>
-
               {myTasks.map((task, index) => {
                 return (
                   <Table.Row className={
-                    store.isTaskAddOrUpdated ? "greenbackground" : ""
+                    store.isTaskUpdated && store.isTaskEditedID === task.id ? "greenbackground" : "" || store.isTaskAdd ? "greenbackground-add" : ""
                   }>
                     <Table.Cell content={task.title} />
                     <Table.Cell content={task.user.name} />
@@ -55,7 +55,6 @@ const MyTasks: React.FC<IMyTasksProps> = observer(() => {
                           store.setSelectedTask(task)
                           store.changeDetailPopupVisibility(true)
                         }} />
-
                         {
                           task.status === 0 ? (
                             <>
@@ -86,8 +85,7 @@ const MyTasks: React.FC<IMyTasksProps> = observer(() => {
         }
 
       </Table>
-
-      <TaskWarningDailog />
+ 
       <TaskCreateDialog taskStore={store} />
       <TaskDeleteDialog taskStore={store} />
       <TaskUpdateDialog taskStore={store} />

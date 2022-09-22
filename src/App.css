@@ -158,42 +158,62 @@ a {
   right: 0;
   top: 1rem;
   width: 250px;
-  height: 0;
   z-index: 99;
 }
 
 .message-response {
-  float: left;
-  width: 250px;
+  width: 100%;
   height: auto;
   min-height: 50px;
   padding: 1rem 0.6rem;
-  color: #111;
+  color: #333;
   margin-top: 0.5rem;
-  background-color: #17c631;
+  background-color: #28a745;
   animation-name: example;
   animation-duration: 0.4s;
+  box-shadow: 0px 5px 7px #000;
+}
+
+@keyframes example {
+  from {
+    opacity: 0;
+    transform: translateX(250px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0px);
+  }
 }
 
 .message-success {
-  background-color: #17c631;
+  background-color: rgb(40, 167, 69, 0.5) !important;
   visibility: visible !important;
 }
+
 .message-error {
   background-color: #c61717;
   visibility: visible !important;
 }
+
 .message-info {
   background-color: #c68e17;
   visibility: visible !important;
 }
 
-.greenbackground:last-child {
-  background-color: #17c631 !important;
+.greenbackground {
+  background-color: rgb(40, 167, 69, 0.5) !important;
+}
+
+.greenbackground-add:last-child {
+  background-color: rgb(40, 167, 69, 0.5) !important;
+}
+
+.detail-title {
+  font-weight: bold;
+}
+
+.ui-form__field:last-child {
+  margin-top: 0 !important;
 }
  
-
-@keyframes example {
-  from {opacity: 0}
-  to {opacity: 1;}
-}

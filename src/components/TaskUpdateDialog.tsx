@@ -9,7 +9,7 @@ interface ITaskUpdateFormProps {
   taskStore: TaskStore
 }
 const TaskUpdateDialog: React.FC<ITaskUpdateFormProps> = observer(({ taskStore }) => {
-  const { selectedTask, changeUpdatePopupVisibility, updateSelectedTaskFromList } = taskStore;
+  const { selectedTask, changeUpdatePopupVisibility, updateTask: updateSelectedTaskFromList } = taskStore;
   return (
     <>
       <Dialog

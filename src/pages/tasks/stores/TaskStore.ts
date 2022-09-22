@@ -5,12 +5,28 @@ import {
   TaskStatus,
   TaskUrls,
 } from "../../../models/tasks/TaskModel";
-import { getTasks, setTasks } from "../../../api/api";
+import { userJWTToken } from "../../../api/api";
+import {
+  ITaskCreateRequestModel,
+  ITaskUpdateRequestModel,
+} from "../../../models/request_response/tasks/CreateTask";
+import axios from "axios";
 
 export class TaskStore {
   constructor() {
     makeObservable(this);
   }
+
+  @observable
+  isLoading: boolean = false;
+  @action
+  showLoading = (): void => {
+    this.isLoading = true;
+  };
+  @action
+  hideLoading = (): void => {
+    this.isLoading = false;
+  };
 
   /* Select Current Task */
   @observable
@@ -22,87 +38,183 @@ export class TaskStore {
 
   /* Add Task to List */
   @action
-  addSelectedTaskToLists = (): void => {
-    const title = this.selectedTask?.title;
-    const description = this.selectedTask?.description;
-    const assignedDepartment = this.selectedTask?.assignedDepartment;
-    var data = JSON.stringify({
-      title: title,
-      description: description,
-      assignedDepartment: assignedDepartment,
-    });
-    setTasks("post", "/", `${data}`);
-    this.initalizesTaskList();
-    store.changeTaskSuccessOrNotPopup(true, "taskCreated");
-    store.changeTaskAddOrUpdated(true)
-    this.isCreateFormOpen = false;
+  createTask = (): void => {
+    this.showLoading();
+
+    const requestPayload: ITaskCreateRequestModel = {
+      title: this.selectedTask!.title,
+      description: this.selectedTask!.description,
+      assignedDepartment: this.selectedTask!.assignedDepartment,
+    };
+
+    var config = {
+      headers: {
+        Authorization: `Bearer ${userJWTToken}`,
+        "Content-Type": "application/json",
+      },
+    };
+
+    axios
+      .post("http://localhost:5000/api/task", requestPayload, config)
+      .then(function (response) {
+        store.initalizesTaskList();
+        store.changeTaskSuccessOrNotPopup(true, "taskCreated");
+        store.changeTaskAdd(true);
+        store.isCreateFormOpen = false;
+        store.hideLoading();
+      })
+      .catch(function (error) {
+        console.log(error);
+        store.hideLoading();
+      });
+  };
+
+  @observable isTaskEditedID: any = 0;
+
+  /* Update Task From List */
+  @action
+  updateTask = (): void => {
+    this.showLoading();
+    const requestPayload: ITaskUpdateRequestModel = {
+      title: this.selectedTask!.title,
+      description: this.selectedTask!.description,
+    };
+    var config = {
+      headers: {
+        Authorization: `Bearer ${userJWTToken}`,
+        "Content-Type": "application/json",
+      },
+    };
+    axios
+      .put(
+        `http://localhost:5000/api/task/${this.selectedTask!.id}`,
+        requestPayload,
+        config
+      )
+      .then(function (response) {
+        store.initializesMyTasks();
+        store.changeTaskSuccessOrNotPopup(true, "taskUpdated");
+        store.changeIsTaskUpdated(true);
+        store.isUpdateFormOpen = false;
+        store.isTaskEditedID = store.selectedTask?.id;
+        store.hideLoading();
+      })
+      .catch(function (error) {
+        console.log(error);
+        store.hideLoading();
+      });
   };
 
   /* Update Task From List */
   @action
-  updateSelectedTaskFromList = (): void => {
-    const currentSelectedID = this.selectedTask?.id;
-    const title = this.selectedTask?.title;
-    const description = this.selectedTask?.description;
+  deleteTask = (): void => {
+    this.showLoading();
+    var config = {
+      headers: {
+        Authorization: `Bearer ${userJWTToken}`,
+      },
+    };
 
-    var data = JSON.stringify({
-      title: title,
-      description: description,
-    });
-    if (this.selectedTask?.status === 0) {
-      setTasks("put", `/${currentSelectedID}`, `${data}`);
-      this.initalizesTaskList();
-      store.changeTaskSuccessOrNotPopup(true, "taskUpdated");
-      store.changeTaskAddOrUpdated(true) 
-    } else {
-      this.changeTaskWarningOpenModal(true);
-    }
+    axios
+      .delete(`http://localhost:5000/api/task/${this.selectedTask!.id}`, config)
+      .then(function (response) {
+        store.initializesMyTasks();
+        store.changeTaskSuccessOrNotPopup(true, "taskDeleted");
+        store.hideLoading();
+      })
+      .catch(function (error) {
+        console.log(error);
+        store.hideLoading();
+      });
 
-    this.isUpdateFormOpen = false;
-  };
-
-  /* Update Task From List */
-  @action
-  deleteSelectedTaskFromList = (): void => {
-    if (this.selectedTask?.status === 0) {
-      const currentSelectedID = this.selectedTask?.id;
-      getTasks("delete", `/${currentSelectedID}`, "");
-      this.initalizesTaskList();
-      store.changeTaskSuccessOrNotPopup(true, "taskDeleted");
-    } else {
-      this.changeTaskWarningOpenModal(true);
-    }
     this.isDeleteFormOpen = false;
   };
 
   @action
   changeStatusTask = (statusName: string): void => {
-    statusName = statusName.toString().toLowerCase();
-    if (this.selectedTask?.status === 0) {
-      const currentSelectedID = this.selectedTask?.id;
-      getTasks("get", `/${statusName}/${currentSelectedID}`, "");
-      this.initalizesTaskList();
-    } else {
-      this.changeTaskWarningOpenModal(true);
-    }
+    this.showLoading();
+    var config = {
+      headers: {
+        Authorization: `Bearer ${userJWTToken}`,
+      },
+    };
+    axios
+      .get(
+        `http://localhost:5000/api/task/complete/${this.selectedTask!.id}`,
+        config
+      )
+      .then(function (response) {
+        store.initializesPendingTasks();
+        store.hideLoading();
+      })
+      .catch(function (error) {
+        console.log(error);
+        store.hideLoading();
+      });
   };
 
   /* Initilazie My Tasks */
   @action
   initializesAllTasks = (): void => {
-    getTasks("get", "/", "");
+    this.showLoading();
+    var config = {
+      headers: {
+        Authorization: `Bearer ${userJWTToken}`,
+      },
+    };
+    axios
+      .get("http://localhost:5000/api/task", config)
+      .then(function (response) {
+        store.allTasks = response.data.payload;
+        store.hideLoading();
+      })
+      .catch(function (error) {
+        console.log(error);
+        store.hideLoading();
+      });
   };
 
   /* Initilazie My Tasks */
   @action
   initializesMyTasks = (): void => {
-    getTasks("get", "/my-tasks", "");
+    this.showLoading();
+    var config = {
+      headers: {
+        Authorization: `Bearer ${userJWTToken}`,
+      },
+    };
+    axios
+      .get("http://localhost:5000/api/task/my-tasks", config)
+      .then(function (response) {
+        store.myTasks = response.data.payload;
+        store.hideLoading();
+      })
+      .catch(function (error) {
+        console.log(error);
+        store.hideLoading();
+      });
   };
 
   /* Initilazie Pending Tasks */
   @action
   initializesPendingTasks = (): void => {
-    getTasks("get", "/pendings", "");
+    this.showLoading();
+    var config = {
+      headers: {
+        Authorization: `Bearer ${userJWTToken}`,
+      },
+    };
+
+    axios
+      .get("http://localhost:5000/api/task/pendings", config)
+      .then(function (response) {
+        store.pendingTasks = response.data.payload;
+        store.hideLoading();
+      })
+      .catch(function (error) {
+        console.log(error);
+        store.hideLoading();
+      });
   };
 
   @action
@@ -169,22 +281,6 @@ export class TaskStore {
     this.isDeleteFormOpen = isOpen;
   };
 
-  /*  Status   */
-  @observable
-  isStatusModalOpen: any = "Pending";
-  @action
-  changeStatusModalOpen = (isOpen: any): void => {
-    this.isStatusModalOpen = isOpen;
-  };
-
-  /*  Warning Modal Open Close   */
-  @observable
-  isTaskWarningOpenModal: boolean = false;
-  @action
-  changeTaskWarningOpenModal = (isOpen: boolean): void => {
-    this.isTaskWarningOpenModal = isOpen;
-  };
-
   /*  Warning Modal Open Close   */
   @observable
   isLogoutWarningOpenModal: boolean = false;
@@ -197,28 +293,43 @@ export class TaskStore {
   @observable
   isTaskSuccessOrNotPopup: boolean = false;
   @observable
-  isActionType: string = ""
+  isActionType: string = "";
+  @observable
+  Interval: number = 3000;
   @action
   changeTaskSuccessOrNotPopup = (isOpen: boolean, isType: string): void => {
     this.isTaskSuccessOrNotPopup = isOpen;
-    this.isActionType = isType
-    setTimeout(function () {
+    this.isActionType = isType;
+    const timeSuc = setTimeout(function () {
       store.isTaskSuccessOrNotPopup = false;
-    }, 3000);
+    }, this.Interval);
+
+    clearInterval(timeSuc)
   };
 
   /*  Task Add or Updated for doing background success   */
   @observable
-  isTaskAddOrUpdated: boolean = false;
+  isTaskUpdated: boolean = false;
   @action
-  changeTaskAddOrUpdated = (isOpen: boolean): void => {
-    this.isTaskAddOrUpdated = isOpen;
+  changeIsTaskUpdated = (isOpen: boolean): void => {
+    this.isTaskUpdated = isOpen;
     setTimeout(function () {
-      store.isTaskAddOrUpdated = false;
-    }, 3000);
+      store.isTaskUpdated = false;
+    }, this.Interval);
   };
 
-  /* ******************************************* */
+  /*  Task Add or Updated for doing background success   */
+  @observable
+  isTaskAdd: boolean = false;
+  @action
+  changeTaskAdd = (isOpen: boolean): void => {
+    this.isTaskAdd = isOpen;
+    setTimeout(function () {
+      store.isTaskAdd = false;
+    }, this.Interval);
+  };
+
+  /******************************************** */
   @observable
   allTasks: ITaskModel[] = [];
 

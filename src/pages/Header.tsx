@@ -6,13 +6,12 @@ import { store } from "./tasks/stores/TaskStore"
 import { observer } from 'mobx-react-lite';
 import LogoutWarningDailog from '../components/LogoutWarningDailog'
 import React from 'react';
+import { TaskUrls } from '../models/tasks/TaskModel';
 
 interface IHeaderProps { }
 
 const Header: React.FC<IHeaderProps> = observer(() => {
-
   const navigate = useNavigate();
-
   const { changeLogoutWarningOpenModal } = store
 
   return (
@@ -22,31 +21,30 @@ const Header: React.FC<IHeaderProps> = observer(() => {
           {
             content: <img src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQI1OjKY1KKU5K4Yym9v7bJbBQoJuskcHgx8A&usqp=CAU' className='logo' alt='' />,
             key: 'logo',
-            onClick: () => navigate("/")
+            onClick: () => navigate(store.getURLAsString(TaskUrls.Home))
           },
           {
             content: "Home",
             key: 'Home',
-            onClick: () => navigate("/"),
+            onClick: () => navigate(store.getURLAsString(TaskUrls.Home)),
           },
           {
             content: 'All Tasks',
             key: 'AllTasks',
-            onClick: () => navigate("/all-tasks")
+            onClick: () => navigate(store.getURLAsString(TaskUrls.AllTasks))
           },
           {
             content: "My Tasks",
             key: 'MyTasks',
-            onClick: () => navigate("/my-tasks")
+            onClick: () => navigate(store.getURLAsString(TaskUrls.MyTasks))
           },
           {
             content: "Pending Tasks",
             key: 'PendingTasks',
-            onClick: () => navigate("/pending-tasks")
+            onClick: () => navigate(store.getURLAsString(TaskUrls.PendingTasks))
           }
         ]}
       />
-
       <div style={{ position: "absolute", top: "1rem", right: "2rem" }}>
         <span className='welcome-user'>
           Welcome {`${JSON.parse(localStorage.getItem("user") || "").name}`}
@@ -55,9 +53,7 @@ const Header: React.FC<IHeaderProps> = observer(() => {
           changeLogoutWarningOpenModal(true)
         }} icon={<LeaveIcon />} />
       </div>
-
       <LogoutWarningDailog />
-
       {
         store.isTaskSuccessOrNotPopup ? (
           <>
@@ -73,7 +69,6 @@ const Header: React.FC<IHeaderProps> = observer(() => {
           ""
         )
       }
-
     </React.Fragment>
   )
 })

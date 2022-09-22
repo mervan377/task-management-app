@@ -2,6 +2,7 @@ import { NotesIcon, PersonIcon, TaskListIcon } from '@fluentui/react-northstar'
 import { observer } from 'mobx-react-lite'
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { TaskUrls } from '../models/tasks/TaskModel'
 import { store } from './tasks/stores/TaskStore'
 
 interface IHomePageProps { }
@@ -10,15 +11,14 @@ const Home: React.FC<IHomePageProps> = observer(() => {
 
   const { allTasks, myTasks, pendingTasks } = store
 
-  React.useEffect(() => {
+  React.useMemo(() => {
     store.initalizesTaskList();
   }, [])
 
   return (
     <div>
       <div className="home_box_wrapper">
-
-        <Link to={"/AllTasks"}>
+        <Link to={store.getURLAsString(TaskUrls.AllTasks)}>
           <div className="home_box">
             <div className='extra_info'>
               <div className='extra_info_icon'>
@@ -32,9 +32,7 @@ const Home: React.FC<IHomePageProps> = observer(() => {
           </div>
         </Link>
 
-
-
-        <Link to={"/MyTasks"}>
+        <Link to={store.getURLAsString(TaskUrls.MyTasks)}>
           <div className="home_box">
             <div className='extra_info'>
               <div className='extra_info_icon'>
@@ -46,9 +44,9 @@ const Home: React.FC<IHomePageProps> = observer(() => {
               </div>
             </div>
           </div>
-
         </Link>
-        <Link to={"/PendingTasks"}>
+
+        <Link to={store.getURLAsString(TaskUrls.PendingTasks)}>
           <div className="home_box">
             <div className='extra_info'>
               <div className='extra_info_icon'>
@@ -60,7 +58,6 @@ const Home: React.FC<IHomePageProps> = observer(() => {
               </div>
             </div>
           </div>
-
         </Link>
       </div >
     </div >

@@ -7,7 +7,7 @@ interface ICreateTaskProps {
     taskStore: TaskStore
 }
 const TaskCreateDialog: React.FC<ICreateTaskProps> = observer(({ taskStore }) => {
-    const { selectedTask, changeCreatePopupVisibility, addSelectedTaskToLists } = taskStore;
+    const { selectedTask, changeCreatePopupVisibility, createTask: addSelectedTaskToLists } = taskStore;
     return (
         <Dialog
             open={taskStore.isCreateFormOpen}

@@ -41,11 +41,18 @@ export const setTasks = (method: string, url: string, data: string) => {
 
   axios(config)
     .then(function (response) {
-      // if (response.data.code === "taskCreated") {
-      //   store.changeTaskCRUDSuccessOrNotPopup(true, "taskCreated");
-      // } else if (response.data.code === "taskUpdated") {
-      //   store.changeTaskCRUDSuccessOrNotPopup(true, "taskUpdated");
-      // }
+      if (response.data.code === "taskCreated") {
+        store.initalizesTaskList();
+        store.changeTaskSuccessOrNotPopup(true, "taskCreated");
+        store.changeTaskAdd(true);
+        store.isCreateFormOpen = false;
+      } else if (response.data.code === "taskUpdated") {
+        store.initalizesTaskList();
+        store.changeTaskSuccessOrNotPopup(true, "taskUpdated");
+        store.changeIsTaskUpdated(true);
+        store.isUpdateFormOpen = false;
+        store.isTaskEditedID = store.selectedTask?.id;
+      }
     })
     .catch(function (error) {
       console.log(error);
