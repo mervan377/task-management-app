@@ -6,6 +6,8 @@ import Alltasks from './pages/tasks/AllTasks';
 import Home from './pages/Home';
 import MyTasks from './pages/tasks/MyTasks';
 import PendingTasks from './pages/tasks/PendingTasks';
+import Deneme from './pages/tasks/Deneme';
+
 
 import Login from './pages/login/Login';
 import NotFound from './pages/NotFound';
@@ -27,6 +29,7 @@ const App: React.FC<IAppProps> = observer(() => {
           <Route path={store.getURLAsString(TaskUrls.AllTasks)} element={<Alltasks />} />
           <Route path={store.getURLAsString(TaskUrls.MyTasks)} element={<MyTasks />} />
           <Route path={store.getURLAsString(TaskUrls.PendingTasks)} element={<PendingTasks />} />
+          <Route path={"/Deneme"} element={<Deneme />} />
           <Route path={store.getURLAsString(TaskUrls.NotFound)} element={<NotFound />} />
         </Route>
       </Routes>

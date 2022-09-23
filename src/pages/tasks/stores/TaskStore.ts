@@ -11,6 +11,10 @@ import {
   ITaskUpdateRequestModel,
 } from "../../../models/request_response/tasks/CreateTask";
 import axios from "axios";
+import { getDatePartHashValue } from "@fluentui/react-northstar";
+
+axios.defaults.headers.common["Authorization"] = `Bearer ${userJWTToken}`;
+axios.defaults.headers.post["Content-Type"] = "application/json";
 
 export class TaskStore {
   constructor() {
@@ -47,15 +51,8 @@ export class TaskStore {
       assignedDepartment: this.selectedTask!.assignedDepartment,
     };
 
-    var config = {
-      headers: {
-        Authorization: `Bearer ${userJWTToken}`,
-        "Content-Type": "application/json",
-      },
-    };
-
     axios
-      .post("http://localhost:5000/api/task", requestPayload, config)
+      .post("http://localhost:5000/api/task", requestPayload)
       .then(function (response) {
         store.initalizesTaskList();
         store.changeTaskSuccessOrNotPopup(true, "taskCreated");
@@ -79,17 +76,11 @@ export class TaskStore {
       title: this.selectedTask!.title,
       description: this.selectedTask!.description,
     };
-    var config = {
-      headers: {
-        Authorization: `Bearer ${userJWTToken}`,
-        "Content-Type": "application/json",
-      },
-    };
+
     axios
       .put(
         `http://localhost:5000/api/task/${this.selectedTask!.id}`,
-        requestPayload,
-        config
+        requestPayload
       )
       .then(function (response) {
         store.isUpdateFormOpen = false;
@@ -97,7 +88,7 @@ export class TaskStore {
         store.initializesMyTasks();
         store.changeTaskSuccessOrNotPopup(true, "taskUpdated");
         store.changeIsTaskUpdated(true);
-        
+
         store.isTaskEditedID = store.selectedTask?.id;
       })
       .catch(function (error) {
@@ -110,14 +101,8 @@ export class TaskStore {
   @action
   deleteTask = (): void => {
     this.showLoading();
-    var config = {
-      headers: {
-        Authorization: `Bearer ${userJWTToken}`,
-      },
-    };
-
     axios
-      .delete(`http://localhost:5000/api/task/${this.selectedTask!.id}`, config)
+      .delete(`http://localhost:5000/api/task/${this.selectedTask!.id}`)
       .then(function (response) {
         store.initializesMyTasks();
         store.changeTaskSuccessOrNotPopup(true, "taskDeleted");
@@ -134,16 +119,8 @@ export class TaskStore {
   @action
   changeStatusTask = (statusName: string): void => {
     this.showLoading();
-    var config = {
-      headers: {
-        Authorization: `Bearer ${userJWTToken}`,
-      },
-    };
     axios
-      .get(
-        `http://localhost:5000/api/task/complete/${this.selectedTask!.id}`,
-        config
-      )
+      .get(`http://localhost:5000/api/task/complete/${this.selectedTask!.id}`)
       .then(function (response) {
         store.initializesPendingTasks();
         store.hideLoading();
@@ -157,65 +134,67 @@ export class TaskStore {
   /* Initilazie My Tasks */
   @action
   initializesAllTasks = (): void => {
-    this.showLoading();
-    var config = {
-      headers: {
-        Authorization: `Bearer ${userJWTToken}`,
-      },
+    const getData = async () => {
+      try {
+        await axios
+          .get("http://localhost:5000/api/task")
+          .then(function (response) {
+            store.allTasks = response.data.payload;
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      } catch (error) {
+        console.log("occured error");
+      } finally {
+        store.hideLoading();
+      }
     };
-    axios
-      .get("http://localhost:5000/api/task", config)
-      .then(function (response) {
-        store.allTasks = response.data.payload;
-        store.hideLoading();
-      })
-      .catch(function (error) {
-        console.log(error);
-        store.hideLoading();
-      });
+    getData();
   };
 
   /* Initilazie My Tasks */
   @action
   initializesMyTasks = (): void => {
-    this.showLoading();
-    var config = {
-      headers: {
-        Authorization: `Bearer ${userJWTToken}`,
-      },
+    const getData = async () => {
+      try {
+        await axios
+        .get("http://localhost:5000/api/task/my-tasks")
+        .then(function (response) {
+          store.myTasks = response.data.payload;
+          store.hideLoading();
+        })
+        .catch(function (error) {
+          console.log(error);
+          store.hideLoading();
+        });
+      } catch (error) {
+        console.log("Occured sth error")
+      } finally {
+        
+      }
+
     };
-    axios
-      .get("http://localhost:5000/api/task/my-tasks", config)
-      .then(function (response) {
-        store.myTasks = response.data.payload;
-        store.hideLoading();
-      })
-      .catch(function (error) {
-        console.log(error);
-        store.hideLoading();
-      });
+    getData();
   };
 
   /* Initilazie Pending Tasks */
   @action
   initializesPendingTasks = (): void => {
-    this.showLoading();
-    var config = {
-      headers: {
-        Authorization: `Bearer ${userJWTToken}`,
-      },
+    const getData = async () => {
+      this.showLoading();
+      await axios
+        .get("http://localhost:5000/api/task/pendings")
+        .then(function (response) {
+          store.pendingTasks = response.data.payload;
+          store.hideLoading();
+        })
+        .catch(function (error) {
+          console.log(error);
+          store.hideLoading();
+        });
     };
-
-    axios
-      .get("http://localhost:5000/api/task/pendings", config)
-      .then(function (response) {
-        store.pendingTasks = response.data.payload;
-        store.hideLoading();
-      })
-      .catch(function (error) {
-        console.log(error);
-        store.hideLoading();
-      });
+    getData();
   };
 
   @action
@@ -301,7 +280,7 @@ export class TaskStore {
   changeTaskSuccessOrNotPopup = (isOpen: boolean, isType: string): void => {
     this.isTaskSuccessOrNotPopup = isOpen;
     this.isActionType = isType;
-    const setIntervalSet = setInterval(function () {
+    setInterval(function () {
       store.isTaskSuccessOrNotPopup = false;
     }, this.Interval);
   };
