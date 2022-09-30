@@ -7,16 +7,12 @@ import TaskCreateDialog from '../../components/TaskCreateDialog';
 import CreateButton from '../../components/CreateButton';
 
 interface IAllTasksProps { }
-
 const AllTasks: React.FC<IAllTasksProps> = observer(() => {
-
   const { allTasks, isLoading, getStatusAsString, getDepartmentAsString } = store;
-
   React.useMemo(() => {
-    store.initializesAllTasks() 
+    store.initializesAllTasks()
   }, [])
-
-  if(isLoading) return <div><Loader size="largest" label="Loading datas" labelPosition="below" /></div>
+  if (isLoading) return <div><Loader size="largest" label="Loading datas" labelPosition="below" /></div>
 
   return (
     <React.Fragment>
@@ -55,9 +51,6 @@ const AllTasks: React.FC<IAllTasksProps> = observer(() => {
           )
         }
       </Table>
-      {
-        // <Loader size="largest" label="largest" labelPosition="below" />
-      }
       <TaskCreateDialog taskStore={store} />
       <TaskDetailDialog taskStore={store} />
     </React.Fragment>

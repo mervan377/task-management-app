@@ -11,7 +11,6 @@ import {
   ITaskUpdateRequestModel,
 } from "../../../models/request_response/tasks/CreateTask";
 import axios from "axios";
-import { getDatePartHashValue } from "@fluentui/react-northstar";
 
 axios.defaults.headers.common["Authorization"] = `Bearer ${userJWTToken}`;
 axios.defaults.headers.post["Content-Type"] = "application/json";
@@ -44,13 +43,11 @@ export class TaskStore {
   @action
   createTask = (): void => {
     this.showLoading();
-
     const requestPayload: ITaskCreateRequestModel = {
       title: this.selectedTask!.title,
       description: this.selectedTask!.description,
       assignedDepartment: this.selectedTask!.assignedDepartment,
     };
-
     axios
       .post("http://localhost:5000/api/task", requestPayload)
       .then(function (response) {
@@ -76,7 +73,6 @@ export class TaskStore {
       title: this.selectedTask!.title,
       description: this.selectedTask!.description,
     };
-
     axios
       .put(
         `http://localhost:5000/api/task/${this.selectedTask!.id}`,
@@ -88,7 +84,6 @@ export class TaskStore {
         store.initializesMyTasks();
         store.changeTaskSuccessOrNotPopup(true, "taskUpdated");
         store.changeIsTaskUpdated(true);
-
         store.isTaskEditedID = store.selectedTask?.id;
       })
       .catch(function (error) {
@@ -112,12 +107,11 @@ export class TaskStore {
         console.log(error);
         store.hideLoading();
       });
-
     this.isDeleteFormOpen = false;
   };
 
   @action
-  changeStatusTask = (statusName: string): void => {
+  changeStatusTask = (): void => {
     this.showLoading();
     axios
       .get(`http://localhost:5000/api/task/complete/${this.selectedTask!.id}`)
@@ -133,68 +127,48 @@ export class TaskStore {
 
   /* Initilazie My Tasks */
   @action
-  initializesAllTasks = (): void => {
-    const getData = async () => {
-      try {
-        await axios
-          .get("http://localhost:5000/api/task")
-          .then(function (response) {
-            store.allTasks = response.data.payload;
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
-      } catch (error) {
-        console.log("occured error");
-      } finally {
-        store.hideLoading();
-      }
-    };
-    getData();
+  initializesAllTasks = async (): Promise<void> => {
+    this.showLoading();
+    try {
+      const response = await axios.get("http://localhost:5000/api/task");
+      store.allTasks = response.data.payload;
+    } catch (error) {
+      console.log("occured error");
+    } finally {
+      store.hideLoading();
+    }
   };
 
   /* Initilazie My Tasks */
   @action
-  initializesMyTasks = (): void => {
-    const getData = async () => {
-      try {
-        await axios
-        .get("http://localhost:5000/api/task/my-tasks")
-        .then(function (response) {
-          store.myTasks = response.data.payload;
-          store.hideLoading();
-        })
-        .catch(function (error) {
-          console.log(error);
-          store.hideLoading();
-        });
-      } catch (error) {
-        console.log("Occured sth error")
-      } finally {
-        
-      }
-
-    };
-    getData();
+  initializesMyTasks = async (): Promise<void> => {
+    this.showLoading();
+    try {
+      const response = await axios.get(
+        "http://localhost:5000/api/task/my-tasks"
+      );
+      store.myTasks = response.data.payload;
+    } catch (error) {
+      console.log("Occured sth error");
+    } finally {
+      store.hideLoading();
+    }
   };
 
   /* Initilazie Pending Tasks */
   @action
-  initializesPendingTasks = (): void => {
-    const getData = async () => {
-      this.showLoading();
-      await axios
-        .get("http://localhost:5000/api/task/pendings")
-        .then(function (response) {
-          store.pendingTasks = response.data.payload;
-          store.hideLoading();
-        })
-        .catch(function (error) {
-          console.log(error);
-          store.hideLoading();
-        });
-    };
-    getData();
+  initializesPendingTasks = async (): Promise<void> => {
+    this.showLoading();
+    try {
+      const response = await axios.get(
+        "http://localhost:5000/api/task/pendings"
+      );
+      store.pendingTasks = response.data.payload;
+    } catch (error) {
+      console.log("Occured sth error");
+    } finally {
+      store.hideLoading();
+    }
   };
 
   @action

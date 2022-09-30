@@ -70,8 +70,7 @@ const MyTasks: React.FC<IMyTasksProps> = observer(() => {
                           ) : (
                             null
                           )
-                        }
-
+                        } 
                       </>
                     } />
                   </Table.Row>

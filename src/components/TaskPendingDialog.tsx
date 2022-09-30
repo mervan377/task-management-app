@@ -21,13 +21,13 @@ const TaskDetailDialog: React.FC<ITaskDetailFormProps> = observer(({ taskStore }
             style={{ backgroundColor: "#8E192E", color: "white" }}
             onClick={() => {
               changePendingDetailPopupVisibility(false)
-              changeStatusTask("reject")
+              changeStatusTask();
             }}> Reject </Button>
           <Button
             style={{ backgroundColor: "#237B4B", color: "white" }}
             onClick={() => {
-              taskStore.changeStatusTask("complete")
-              changePendingDetailPopupVisibility(false)
+              taskStore.changeStatusTask();
+              changePendingDetailPopupVisibility(false);
             }}> Complete </Button>
         </>
       }
