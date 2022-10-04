@@ -9,7 +9,7 @@ interface ITaskUpdateFormProps {
   taskStore: TaskStore
 }
 const TaskUpdateDialog: React.FC<ITaskUpdateFormProps> = observer(({ taskStore }) => {
-  const { selectedTask, changeUpdatePopupVisibility, updateTask: updateSelectedTaskFromList } = taskStore;
+  const { selectedTask, changeUpdatePopupVisibility, updateTask } = taskStore;
   return (
     <>
       <Dialog
@@ -20,7 +20,7 @@ const TaskUpdateDialog: React.FC<ITaskUpdateFormProps> = observer(({ taskStore }
         }}
         confirmButton="Update"
         onConfirm={() => {
-          updateSelectedTaskFromList()
+          updateTask()
         }}
         content={
           <TaskForm selectedTask={selectedTask!} isEditableForm={true} />

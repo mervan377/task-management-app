@@ -3,13 +3,16 @@ import { observer } from 'mobx-react-lite'
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { TaskUrls } from '../models/tasks/TaskModel'
+import { BringAsString } from '../services/services'
 import { store } from './tasks/stores/TaskStore'
+
 
 interface IHomePageProps { }
 
 const Home: React.FC<IHomePageProps> = observer(() => {
 
   const { allTasks, myTasks, pendingTasks } = store
+  const { getURLAsString } = BringAsString
 
   React.useMemo(() => {
     store.initalizesTaskList();
@@ -18,7 +21,7 @@ const Home: React.FC<IHomePageProps> = observer(() => {
   return (
     <div>
       <div className="home_box_wrapper">
-        <Link to={store.getURLAsString(TaskUrls.AllTasks)}>
+        <Link to={getURLAsString(TaskUrls.AllTasks)}>
           <div className="home_box">
             <div className='extra_info'>
               <div className='extra_info_icon'>
@@ -32,7 +35,7 @@ const Home: React.FC<IHomePageProps> = observer(() => {
           </div>
         </Link>
 
-        <Link to={store.getURLAsString(TaskUrls.MyTasks)}>
+        <Link to={getURLAsString(TaskUrls.MyTasks)}>
           <div className="home_box">
             <div className='extra_info'>
               <div className='extra_info_icon'>
@@ -46,7 +49,7 @@ const Home: React.FC<IHomePageProps> = observer(() => {
           </div>
         </Link>
 
-        <Link to={store.getURLAsString(TaskUrls.PendingTasks)}>
+        <Link to={getURLAsString(TaskUrls.PendingTasks)}>
           <div className="home_box">
             <div className='extra_info'>
               <div className='extra_info_icon'>

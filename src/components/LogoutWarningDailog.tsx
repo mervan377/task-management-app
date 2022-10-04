@@ -1,14 +1,14 @@
 import { Dialog } from '@fluentui/react-northstar';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
-import { store } from '../pages/tasks/stores/TaskStore';
+import { authStore } from '../pages/login/stores/authStore';
 
 
 interface ILogoutWarningFormProps {
 }
 
 const LogoutWarningDialog: React.FC<ILogoutWarningFormProps> = observer(() => {
-    const { isLogoutWarningOpenModal, changeLogoutWarningOpenModal } = store;
+    const { isLogoutWarningOpenModal, changeLogoutWarningOpenModal, logout } = authStore;
     return (
         <Dialog
             open={isLogoutWarningOpenModal}
@@ -18,8 +18,7 @@ const LogoutWarningDialog: React.FC<ILogoutWarningFormProps> = observer(() => {
             }}
             confirmButton="Logout"
             onConfirm={() => {
-                localStorage.removeItem("user");
-                window.location.href = "/Login";
+                logout()
             }} 
             header="Are you sure you want to logout?"
         />

@@ -2,8 +2,7 @@ import { AddIcon, Button } from '@fluentui/react-northstar'
 import { observer } from 'mobx-react-lite'
 import React from 'react'
 
-import { store } from '../pages/tasks/stores/TaskStore'
-import { getTasks } from "../api/api"
+import { store } from '../pages/tasks/stores/TaskStore' 
 
 interface ICreateButtonProps { }
 const CreateButton: React.FC<ICreateButtonProps> = observer(() => {
@@ -16,7 +15,7 @@ const CreateButton: React.FC<ICreateButtonProps> = observer(() => {
             <Button className='create-button' content="Reset Data" onClick={() => {
                 store.initializeSelectedTask()
                 store.initalizesTaskList()
-                getTasks("get", "/reset-data", "")
+                store.resetData()
             }} />
         </React.Fragment>
     )

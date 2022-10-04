@@ -1,7 +1,7 @@
 import React from 'react'
 import { Outlet } from "react-router-dom";
-import Header from './Header';
-import BreadcrumbTop from './Breadcrumb';
+import Header from '../../../components/Header';
+import BreadcrumbTop from '../../../components/Breadcrumb';
 import { observer } from 'mobx-react-lite';
 
 interface ITaskLayoutFormProps { }

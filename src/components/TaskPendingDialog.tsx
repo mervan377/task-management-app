@@ -7,27 +7,27 @@ interface ITaskDetailFormProps {
   taskStore: TaskStore
 }
 const TaskDetailDialog: React.FC<ITaskDetailFormProps> = observer(({ taskStore }) => {
-  const { selectedTask, changePendingPopupVisibility: changePendingDetailPopupVisibility, changeStatusTask } = taskStore;
+  const { selectedTask, changePendingPopupVisibility, taskComplete, taskReject } = taskStore;
   return (
     <Dialog
       open={taskStore.isPendingFormOpen}
       cancelButton="Close"
       onCancel={() => {
-        changePendingDetailPopupVisibility(false)
+        changePendingPopupVisibility(false)
       }}
       confirmButton={
         <>
           <Button
             style={{ backgroundColor: "#8E192E", color: "white" }}
             onClick={() => {
-              changePendingDetailPopupVisibility(false)
-              changeStatusTask();
+              taskReject();
+              changePendingPopupVisibility(false)
             }}> Reject </Button>
           <Button
             style={{ backgroundColor: "#237B4B", color: "white" }}
             onClick={() => {
-              taskStore.changeStatusTask();
-              changePendingDetailPopupVisibility(false);
+              taskComplete();
+              changePendingPopupVisibility(false);
             }}> Complete </Button>
         </>
       }

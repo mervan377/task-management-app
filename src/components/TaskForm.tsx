@@ -1,8 +1,8 @@
 import React from 'react'
 import { Flex, Form, Input, FormField, FormLabel, FormTextArea, FormDropdown, Divider } from '@fluentui/react-northstar';
 import { observer } from 'mobx-react';
-import { store } from '../pages/tasks/stores/TaskStore';
 import { ITaskModel } from '../models/tasks/TaskModel';
+import { BringAsString } from '../services/services';
 
 interface ITaskFormProps {
     selectedTask?: ITaskModel,
@@ -16,7 +16,7 @@ const departmentItems = [
 ]
 
 const TaskDetailForm: React.FC<ITaskFormProps> = observer(({ selectedTask, isEditableForm }) => {
-    const { getDepartmentAsString } = store;
+    const { getDepartmentAsString } = BringAsString;
 
     return (
         <Flex gap="gap.small">
@@ -69,7 +69,6 @@ const TaskDetailForm: React.FC<ITaskFormProps> = observer(({ selectedTask, isEdi
                             )
                         }
                     </FormField>
-
                     <FormField>
                         <FormLabel htmlFor="title" id="first-name-label" className='detail-title'>
                             Assisgment department
@@ -81,7 +80,6 @@ const TaskDetailForm: React.FC<ITaskFormProps> = observer(({ selectedTask, isEdi
                                 </>
                             ) : (
                                 <>
-
                                     <FormDropdown placeholder="Select assisgment department" disabled={!isEditableForm} fluid
                                         items={departmentItems}
                                         checkable
@@ -94,9 +92,6 @@ const TaskDetailForm: React.FC<ITaskFormProps> = observer(({ selectedTask, isEdi
                             )
                         }
                     </FormField>
-
-
-
                 </Form>
             </Flex>
         </Flex>

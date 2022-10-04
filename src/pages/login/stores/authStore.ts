@@ -1,7 +1,6 @@
-import { action, makeObservable, observable, toJS } from "mobx";
-import { setAuth } from "../../../api/api";
+import axios from "axios";
+import { action, makeObservable, observable } from "mobx";
 import { Departments, ILoginModel } from "../../../models/login/LoginModel";
-
 
 export class AuthStore {
   constructor() {
@@ -18,15 +17,34 @@ export class AuthStore {
   loginModel: ILoginModel;
 
   @action
-  login = (): void => {
-    setAuth("post", "/login", toJS(this.loginModel));
+  login = async (): Promise<void> => {
+    const requestPayload: ILoginModel = {
+      email: this.loginModel.email,
+      password: this.loginModel.password,
+    };
+
+    try {
+      const response = await axios.post("/auth/login", requestPayload);
+      localStorage.setItem("user", JSON.stringify(response.data.payload));
+      window.location.href = "/";
+    } catch (error) {
+      console.log("Occured sth error", error);
+    }
+  };
+
+  /*  Warning Modal Open Close   */
+  @observable
+  isLogoutWarningOpenModal: boolean = false;
+  @action
+  changeLogoutWarningOpenModal = (isOpen: boolean): void => {
+    this.isLogoutWarningOpenModal = isOpen;
   };
 
   /* Logout user */
   @action
   logout = (): void => {
-
-
+    localStorage.removeItem("user");
+    window.location.href = "/Login";
   };
 
   getDepartmentAsString = (status: Departments): string => {

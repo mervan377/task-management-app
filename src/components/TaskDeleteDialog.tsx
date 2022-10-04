@@ -9,7 +9,7 @@ interface ITaskDeleteFormProps {
 
 const TaskDeleteDialog: React.FC<ITaskDeleteFormProps> = observer(({ taskStore }) => {
 
-    const { changeDeletePopupVisibility, deleteTask: deleteSelectedTaskFromList } = taskStore;
+    const { changeDeletePopupVisibility, deleteTask } = taskStore;
 
     return (
         <>
@@ -21,7 +21,7 @@ const TaskDeleteDialog: React.FC<ITaskDeleteFormProps> = observer(({ taskStore }
                 }}
                 confirmButton="Delete"
                 onConfirm={() => {
-                    deleteSelectedTaskFromList()
+                    deleteTask()
                 }}
                 content={
                     `Do you want to delete the task that has the title ${taskStore.selectedTask?.title} ?`

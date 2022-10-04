@@ -3,126 +3,179 @@ import {
   Departments,
   ITaskModel,
   TaskStatus,
-  TaskUrls,
 } from "../../../models/tasks/TaskModel";
-import { userJWTToken } from "../../../api/api";
 import {
   ITaskCreateRequestModel,
   ITaskUpdateRequestModel,
 } from "../../../models/request_response/tasks/CreateTask";
 import axios from "axios";
-
-axios.defaults.headers.common["Authorization"] = `Bearer ${userJWTToken}`;
-axios.defaults.headers.post["Content-Type"] = "application/json";
+import { BringAsString } from "../../../services/services";
 
 export class TaskStore {
   constructor() {
     makeObservable(this);
   }
 
-  @observable
-  isLoading: boolean = false;
-  @action
-  showLoading = (): void => {
-    this.isLoading = true;
-  };
-  @action
-  hideLoading = (): void => {
-    this.isLoading = false;
-  };
-
-  /* Select Current Task */
-  @observable
-  selectedTask: ITaskModel | undefined;
-  @action
-  setSelectedTask = (task: ITaskModel): void => {
-    this.selectedTask = { ...task };
-  };
-
   /* Add Task to List */
   @action
-  createTask = (): void => {
+  createTask = async (): Promise<void> => {
     this.showLoading();
+
+    if (
+      this.selectedTask?.title.trim() === "" ||
+      this.selectedTask?.description.trim() === ""
+    ) {
+      this.changeFormModalIsEmptyVisibility(true);
+      store.hideLoading();
+      return;
+    }
+
     const requestPayload: ITaskCreateRequestModel = {
       title: this.selectedTask!.title,
       description: this.selectedTask!.description,
       assignedDepartment: this.selectedTask!.assignedDepartment,
     };
-    axios
-      .post("http://localhost:5000/api/task", requestPayload)
-      .then(function (response) {
-        store.initalizesTaskList();
-        store.changeTaskSuccessOrNotPopup(true, "taskCreated");
-        store.changeTaskAdd(true);
-        store.isCreateFormOpen = false;
-        store.hideLoading();
-      })
-      .catch(function (error) {
-        console.log(error);
-        store.hideLoading();
-      });
+
+    try {
+      const response = await axios.post("/task", requestPayload);
+      console.log(response);
+      store.initalizesTaskList();
+      store.changeTaskSuccessOrNotPopup(true, response.data.code);
+      store.changeTaskAdd(true);
+      store.isCreateFormOpen = false;
+    } catch (error) {
+      console.log((error as any).message);
+    } finally {
+      store.hideLoading();
+    }
   };
 
-  @observable isTaskEditedID: any = 0;
+  /*  Create Form Open  */
+  @observable
+  isCreateFormOpen: boolean = false;
+  @action
+  changeCreatePopupVisibility = (isOpen: boolean): void => {
+    this.isCreateFormOpen = isOpen;
+  };
+
+  /*  Task Add for doing background success   */
+  @observable
+  isTaskAdd: boolean = false;
+  @action
+  changeTaskAdd = (isOpen: boolean): void => {
+    // Silinecek
+    this.isTaskAdd = isOpen;
+    setTimeout(function () {
+      store.isTaskAdd = false;
+    }, this.intervalTime);
+  };
+
+  @observable isTaskEditedID: number | undefined = 0;
 
   /* Update Task From List */
   @action
-  updateTask = (): void => {
+  updateTask = async (): Promise<void> => {
     this.showLoading();
+
+    if (
+      this.selectedTask?.title.trim() === "" ||
+      this.selectedTask?.description.trim() === ""
+    ) {
+      this.changeFormModalIsEmptyVisibility(true);
+      store.hideLoading();
+      return;
+    }
     const requestPayload: ITaskUpdateRequestModel = {
       title: this.selectedTask!.title,
       description: this.selectedTask!.description,
     };
-    axios
-      .put(
-        `http://localhost:5000/api/task/${this.selectedTask!.id}`,
+
+    try {
+      const response = await axios.put(
+        `/task/${this.selectedTask!.id}`,
         requestPayload
-      )
-      .then(function (response) {
-        store.isUpdateFormOpen = false;
-        store.hideLoading();
-        store.initializesMyTasks();
-        store.changeTaskSuccessOrNotPopup(true, "taskUpdated");
-        store.changeIsTaskUpdated(true);
-        store.isTaskEditedID = store.selectedTask?.id;
-      })
-      .catch(function (error) {
-        console.log(error);
-        store.hideLoading();
-      });
+      );
+      store.isUpdateFormOpen = false;
+      store.initializesMyTasks();
+      store.changeTaskSuccessOrNotPopup(true, response.data.code);
+      store.changeIsTaskUpdated(true);
+      store.isTaskEditedID = store.selectedTask!.id;
+    } catch (error) {
+      console.log((error as any).message);
+    } finally {
+      store.hideLoading();
+    }
   };
 
-  /* Update Task From List */
+  /*  Task Updated for doing background success   */
+  @observable
+  isTaskUpdated: boolean = false;
   @action
-  deleteTask = (): void => {
-    this.showLoading();
-    axios
-      .delete(`http://localhost:5000/api/task/${this.selectedTask!.id}`)
-      .then(function (response) {
-        store.initializesMyTasks();
-        store.changeTaskSuccessOrNotPopup(true, "taskDeleted");
-        store.hideLoading();
-      })
-      .catch(function (error) {
-        console.log(error);
-        store.hideLoading();
-      });
-    this.isDeleteFormOpen = false;
+  changeIsTaskUpdated = (isOpen: boolean): void => {
+    this.isTaskUpdated = isOpen;
+    setTimeout(function () {
+      store.isTaskUpdated = false;
+    }, this.intervalTime);
   };
 
+  /*  Update Form Open  */
+  @observable
+  isUpdateFormOpen: boolean = false;
   @action
-  changeStatusTask = (): void => {
+  changeUpdatePopupVisibility = (isOpen: boolean): void => {
+    this.isUpdateFormOpen = isOpen;
+  };
+
+  /* Delete Task From List */
+  @action
+  deleteTask = async (): Promise<void> => {
     this.showLoading();
-    axios
-      .get(`http://localhost:5000/api/task/complete/${this.selectedTask!.id}`)
-      .then(function (response) {
-        store.initializesPendingTasks();
-        store.hideLoading();
-      })
-      .catch(function (error) {
-        console.log(error);
-        store.hideLoading();
-      });
+    try {
+      const response = await axios.delete(`/task/${this.selectedTask!.id}`);
+      store.initializesMyTasks();
+      store.changeTaskSuccessOrNotPopup(true, response.data.code);
+    } catch (error) {
+      console.log((error as any).message);
+    } finally {
+      store.hideLoading();
+      this.isDeleteFormOpen = false;
+    }
+  };
+
+  /*  Delete Form Open  */
+  @observable
+  isDeleteFormOpen: boolean = false;
+  @action
+  changeDeletePopupVisibility = (isOpen: boolean): void => {
+    this.isDeleteFormOpen = isOpen;
+  };
+
+  /* Change Status Task Complete or Reject */
+  @action
+  taskComplete = async (): Promise<void> => {
+    this.showLoading();
+    try {
+      await axios.get(`/task/complete/${this.selectedTask!.id}`);
+      store.initializesPendingTasks();
+    } catch (error) {
+      console.log((error as any).message);
+    } finally {
+      store.hideLoading();
+    }
+  };
+
+  /* Change Status Task Complete or Reject */
+  @action
+  taskReject = async (): Promise<void> => {
+    this.showLoading();
+    try {
+      await axios.get(`/task/reject/${this.selectedTask!.id}`);
+      store.initializesPendingTasks();
+    } catch (error) {
+      console.log((error as any).message);
+    } finally {
+      store.hideLoading();
+    }
   };
 
   /* Initilazie My Tasks */
@@ -130,10 +183,10 @@ export class TaskStore {
   initializesAllTasks = async (): Promise<void> => {
     this.showLoading();
     try {
-      const response = await axios.get("http://localhost:5000/api/task");
+      const response = await axios.get("/task");
       store.allTasks = response.data.payload;
     } catch (error) {
-      console.log("occured error");
+      console.log((error as any).message);
     } finally {
       store.hideLoading();
     }
@@ -144,12 +197,10 @@ export class TaskStore {
   initializesMyTasks = async (): Promise<void> => {
     this.showLoading();
     try {
-      const response = await axios.get(
-        "http://localhost:5000/api/task/my-tasks"
-      );
+      const response = await axios.get("/task/my-tasks");
       store.myTasks = response.data.payload;
     } catch (error) {
-      console.log("Occured sth error");
+      console.log((error as any).message);
     } finally {
       store.hideLoading();
     }
@@ -160,12 +211,10 @@ export class TaskStore {
   initializesPendingTasks = async (): Promise<void> => {
     this.showLoading();
     try {
-      const response = await axios.get(
-        "http://localhost:5000/api/task/pendings"
-      );
+      const response = await axios.get("/task/pendings");
       store.pendingTasks = response.data.payload;
     } catch (error) {
-      console.log("Occured sth error");
+      console.log((error as any).message);
     } finally {
       store.hideLoading();
     }
@@ -176,6 +225,38 @@ export class TaskStore {
     this.initializesAllTasks();
     this.initializesMyTasks();
     this.initializesPendingTasks();
+  };
+
+  /* Considered Each Tasks Types */
+  @observable
+  allTasks: ITaskModel[] = [];
+
+  @observable
+  myTasks: ITaskModel[] = [];
+
+  @observable
+  pendingTasks: ITaskModel[] = [];
+
+  /* Initilazie Pending Tasks */
+  @action
+  resetData = async (): Promise<void> => {
+    this.showLoading();
+    try {
+      await axios.get("/task/reset-data");
+      this.initializesMyTasks();
+      this.initializesAllTasks();
+    } catch (error) {
+      console.log((error as any).message);
+    }
+    this.hideLoading();
+  };
+
+  /* Select Current Task */
+  @observable
+  selectedTask: ITaskModel | undefined;
+  @action
+  setSelectedTask = (task: ITaskModel): void => {
+    this.selectedTask = { ...task };
   };
 
   /* Make Form Empty */
@@ -195,6 +276,12 @@ export class TaskStore {
     };
   };
 
+  @observable isFormModalIsEmpty: boolean = false;
+  @action
+  changeFormModalIsEmptyVisibility = (isOpen: boolean): void => {
+    this.isFormModalIsEmpty = isOpen;
+  };
+
   /*  Pending Detail Form Open  */
   @observable
   isPendingFormOpen: boolean = false;
@@ -211,141 +298,33 @@ export class TaskStore {
     this.isDetailFormOpen = isOpen;
   };
 
-  /*  Update Form Open  */
-  @observable
-  isUpdateFormOpen: boolean = false;
-  @action
-  changeUpdatePopupVisibility = (isOpen: boolean): void => {
-    this.isUpdateFormOpen = isOpen;
-  };
-
-  /*  Create Form Open  */
-  @observable
-  isCreateFormOpen: boolean = false;
-  @action
-  changeCreatePopupVisibility = (isOpen: boolean): void => {
-    this.isCreateFormOpen = isOpen;
-  };
-
-  /*  Delete Form Open  */
-  @observable
-  isDeleteFormOpen: boolean = false;
-  @action
-  changeDeletePopupVisibility = (isOpen: boolean): void => {
-    this.isDeleteFormOpen = isOpen;
-  };
-
-  /*  Warning Modal Open Close   */
-  @observable
-  isLogoutWarningOpenModal: boolean = false;
-  @action
-  changeLogoutWarningOpenModal = (isOpen: boolean): void => {
-    this.isLogoutWarningOpenModal = isOpen;
-  };
-
   /*  Warning Modal Open Close   */
   @observable
   isTaskSuccessOrNotPopup: boolean = false;
   @observable
-  isActionType: string = "";
-  @observable
-  Interval: number = 3000;
+  ModalActionTypeName: string = "";
+  intervalTime: number = 2000;
   @action
   changeTaskSuccessOrNotPopup = (isOpen: boolean, isType: string): void => {
     this.isTaskSuccessOrNotPopup = isOpen;
-    this.isActionType = isType;
-    setInterval(function () {
+    this.ModalActionTypeName = BringAsString.getTaskActionTypes(isType);
+    setTimeout(function () {
       store.isTaskSuccessOrNotPopup = false;
-    }, this.Interval);
+    }, this.intervalTime);
   };
 
-  /*  Task Add or Updated for doing background success   */
+  /* Loading Effect is Show or Not */
   @observable
-  isTaskUpdated: boolean = false;
+  isLoading: boolean = false;
   @action
-  changeIsTaskUpdated = (isOpen: boolean): void => {
-    this.isTaskUpdated = isOpen;
-    setInterval(function () {
-      store.isTaskUpdated = false;
-    }, this.Interval);
+  showLoading = (): void => {
+    this.isLoading = true;
   };
-
-  /*  Task Add or Updated for doing background success   */
-  @observable
-  isTaskAdd: boolean = false;
   @action
-  changeTaskAdd = (isOpen: boolean): void => {
-    this.isTaskAdd = isOpen;
-    setInterval(function () {
-      store.isTaskAdd = false;
-    }, this.Interval);
+  hideLoading = (): void => {
+    this.isLoading = false;
   };
-
-  /******************************************** */
-  @observable
-  allTasks: ITaskModel[] = [];
-
-  @observable
-  myTasks: ITaskModel[] = [];
-
-  @observable
-  pendingTasks: ITaskModel[] = [];
-
-  getStatusAsString = (status: TaskStatus): string => {
-    switch (status) {
-      case TaskStatus.Pending:
-        return "Pending";
-      case TaskStatus.Completed:
-        return "Completed";
-      case TaskStatus.Rejected:
-        return "Rejected";
-      default:
-        return "Error";
-    }
-  };
-
-  getDepartmentAsString = (status: Departments): string => {
-    switch (status) {
-      case Departments.HumanResources:
-        return "Human Resources Deparment";
-      case Departments.Sales:
-        return "Sales Deparment";
-      case Departments.Marketing:
-        return "Advertisement Deparment";
-      default:
-        return "Error";
-    }
-  };
-
-  getURLAsString = (status: TaskUrls): string => {
-    switch (status) {
-      case TaskUrls.Home:
-        return "/";
-      case TaskUrls.AllTasks:
-        return "/all-tasks";
-      case TaskUrls.MyTasks:
-        return "/my-tasks";
-      case TaskUrls.PendingTasks:
-        return "/pending-tasks";
-      case TaskUrls.NotFound:
-        return "*";
-      default:
-        return "Error";
-    }
-  };
-
-  getTaskActionTypes = (actionType: string): string => {
-    switch (actionType) {
-      case "taskCreated":
-        return "Task Create Successfully";
-      case "taskDeleted":
-        return "Task Deleted Successfully";
-      case "taskUpdated":
-        return "Task Updated Successfully";
-      default:
-        return "Error";
-    }
-  };
+ 
 }
 
 export const store = new TaskStore();

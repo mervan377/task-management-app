@@ -26,7 +26,7 @@ const BreadcrumbTop: React.FC<IBreadcrumbProps> = observer(() => {
                     )
                 }
                 <Breadcrumb.Item>
-                    <div className="current-location" style={{textTransform: "capitalize"}}>{currentLocation}</div>
+                    <div className="current-location" style={{ textTransform: "capitalize" }}>{currentLocation}</div>
                 </Breadcrumb.Item>
             </Breadcrumb>
         </React.Fragment>
