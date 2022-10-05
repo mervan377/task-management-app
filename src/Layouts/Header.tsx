@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import { authStore } from "../pages/login/stores/authStore"
 import { store } from '../pages/tasks/stores/TaskStore';
 import { observer } from 'mobx-react-lite';
-import LogoutWarningDailog from './LogoutWarningDailog'
+import LogoutWarningDailog from '../components/LogoutWarningDailog'
 import React from 'react';
 import { TaskUrls } from '../models/tasks/TaskModel';
 import { BringAsString } from '../services/services';
@@ -17,9 +17,10 @@ const Header: React.FC<IHeaderProps> = observer(() => {
   const { changeLogoutWarningOpenModal } = authStore
   const { getURLAsString } = BringAsString
 
+
   let userName: string = ""
-  if (localStorage.getItem("user") !== null) {
-    userName = JSON.parse(localStorage.getItem("user") || "").name;
+  if (localStorage.getItem('user') !== null) {
+    userName = JSON.parse(localStorage.getItem("user") || "").name
   }
 
   return (

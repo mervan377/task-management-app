@@ -4,7 +4,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { TaskUrls } from '../models/tasks/TaskModel'
 import { BringAsString } from '../services/services'
-import { store } from './tasks/stores/TaskStore'
+import { store } from '../pages/tasks/stores/TaskStore'
 
 
 interface IHomePageProps { }

@@ -3,14 +3,14 @@ import './App.css';
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import TasksLayout from './pages/tasks/Layout/TaskLayout';
 import Alltasks from './pages/tasks/AllTasks';
-import Home from './pages/Home';
+import Home from './Layouts/Home';
 import MyTasks from './pages/tasks/MyTasks';
 import PendingTasks from './pages/tasks/PendingTasks';
 import Deneme from './pages/tasks/Deneme';
 
 
 import Login from './pages/login/Login';
-import NotFound from './pages/NotFound';
+import NotFound from './Layouts/NotFound';
 import LoginLayout from './pages/login/Layout/LoginLayout';
 import { TaskUrls } from './models/tasks/TaskModel';
 import { observer } from 'mobx-react-lite';
@@ -18,15 +18,14 @@ import axios from 'axios';
 import { BringAsString } from './services/services';
 
 
-let currentUser: any
-if (localStorage.getItem("user") !== null) {
-  currentUser = JSON.parse(localStorage.getItem("user") || "").jwtToken;
+let currentUser: string = ""
+if (localStorage.getItem('user') !== null) {
+  currentUser = JSON.parse(localStorage.getItem("user") || "").jwtToken
 }
 
 axios.defaults.headers.common["Authorization"] = `Bearer ${currentUser}`;
 axios.defaults.headers.post["Content-Type"] = "application/json";
 axios.defaults.baseURL = "http://localhost:5000/api"
-
 
 interface IAppProps { }
 const App: React.FC<IAppProps> = observer(() => {
@@ -51,7 +50,7 @@ const App: React.FC<IAppProps> = observer(() => {
       <BrowserRouter>
         <Routes>
           <Route element={<LoginLayout />} >
-            <Route path='/login' element={<Login />} />
+            <Route path='/Login' element={<Login />} />
             <Route path='*' element={<NotFound />} />
           </Route>
         </Routes>

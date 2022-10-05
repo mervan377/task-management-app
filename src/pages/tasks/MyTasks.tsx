@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Alert, Button, EditIcon, Loader, Table, tableHeaderCellBehavior, TrashCanIcon, ZoomInIcon } from '@fluentui/react-northstar';
+import { Alert, Button, EditIcon, Loader, Status, Table, tableHeaderCellBehavior, TrashCanIcon, ZoomInIcon } from '@fluentui/react-northstar';
 
 import TaskDeleteDialog from '../../components/TaskDeleteDialog';
 import TaskDetailDialog from '../../components/TaskDetailDialog';
@@ -8,8 +8,7 @@ import { BringAsString } from '../../services/services';
 import { observer } from 'mobx-react-lite';
 import { ITaskModel } from '../../models/tasks/TaskModel';
 import { store } from './stores/TaskStore';
-import TaskCreateDialog from '../../components/TaskCreateDialog';
-import CreateButton from '../../components/CreateButton';
+import TaskCreateDialog from '../../components/TaskCreateDialog'; 
 import TaskFormEmptyDialog from '../../components/TaskFormIsEmptyDialog';
 
 interface IMyTasksProps {
@@ -23,10 +22,8 @@ const MyTasks: React.FC<IMyTasksProps> = observer(() => {
   }, [])
   if (isLoading) return <div><Loader size="largest" label="Loading datas" labelPosition="below" /></div>
   return (
-    <React.Fragment>
-      {/*  */}
-      <CreateButton />
-
+    <React.Fragment> 
+     
       {
         myTasks.length ? (
           <>
@@ -46,7 +43,39 @@ const MyTasks: React.FC<IMyTasksProps> = observer(() => {
                     <Table.Cell content={task.title} />
                     <Table.Cell content={task.user.name} />
                     <Table.Cell content={getDepartmentAsString(task.assignedDepartment)} />
-                    <Table.Cell content={getStatusAsString(task.status)} />
+                    {
+                      getStatusAsString(task.status) === "Pending" ? (
+                        <>
+                          <Table.Cell content={
+                            <div>
+                              <Status state={"warning"} title="warning" /> <code>{getStatusAsString(task.status)}</code>
+                            </div>
+                          } />
+                        </>
+                      ) : ""
+                    }
+                    {
+                      getStatusAsString(task.status) === "Completed" ? (
+                        <>
+                          <Table.Cell content={
+                            <div>
+                              <Status state={"success"} title="success" /> <code>{getStatusAsString(task.status)}</code>
+                            </div>
+                          } />
+                        </>
+                      ) : ""
+                    }
+                    {
+                      getStatusAsString(task.status) === "Rejected" ? (
+                        <>
+                          <Table.Cell content={
+                            <div>
+                              <Status state={"error"} title="error" /> <code>{getStatusAsString(task.status)}</code>
+                            </div>
+                          } />
+                        </>
+                      ) : ""
+                    }
                     <Table.Cell content={
                       <>
                         <Button content="" icon={<ZoomInIcon />} iconPosition="after" onClick={() => {

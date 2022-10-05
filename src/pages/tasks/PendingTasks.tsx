@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Alert, Button, Loader, Table, tableHeaderCellBehavior, ZoomInIcon } from '@fluentui/react-northstar';
+import { Alert, Button, Loader, Status, Table, tableHeaderCellBehavior, ZoomInIcon } from '@fluentui/react-northstar';
 
 import TaskPendingDialog from '../../components/TaskPendingDialog';
 import TaskCreateDialog from '../../components/TaskCreateDialog';
@@ -41,7 +41,17 @@ const PendingTasks: React.FC<IPendingTasksProps> = observer(() => {
                     <Table.Cell content={task.title} />
                     <Table.Cell content={task.user.name} />
                     <Table.Cell content={getDepartmentAsString(task.assignedDepartment)} />
-                    <Table.Cell content={getStatusAsString(task.status)} />
+                    {
+                      getStatusAsString(task.status) === "Pending" ? (
+                        <>
+                          <Table.Cell content={
+                            <div>
+                              <Status state={"warning"} title="warning" /> <code>{getStatusAsString(task.status)}</code>
+                            </div>
+                          } />
+                        </>
+                      ) : ""
+                    }
                     <Table.Cell content={<Button content="" icon={<ZoomInIcon />} iconPosition="after" onClick={() => {
                       setSelectedTask(task)
                       changePendingDetailPopupVisibility(true)
@@ -53,10 +63,10 @@ const PendingTasks: React.FC<IPendingTasksProps> = observer(() => {
           </>
         ) : (
           <>
-          <Alert variables={{ urgent: true }}>
-            <h1>No Task Found</h1>
-          </Alert>
-        </>
+            <Alert variables={{ urgent: true }}>
+              <h1>No Task Found</h1>
+            </Alert>
+          </>
         )
       }
       <TaskCreateDialog taskStore={store} />

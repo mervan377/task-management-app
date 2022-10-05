@@ -25,7 +25,7 @@ export class TaskStore {
       this.selectedTask?.title.trim() === "" ||
       this.selectedTask?.description.trim() === ""
     ) {
-      this.changeFormModalIsEmptyVisibility(true);
+      this.changeFormModalIsEmptyVisibility(false);
       store.hideLoading();
       return;
     }
@@ -40,8 +40,8 @@ export class TaskStore {
       const response = await axios.post("/task", requestPayload);
       console.log(response);
       store.initalizesTaskList();
-      store.changeTaskSuccessOrNotPopup(true, response.data.code);
-      store.changeTaskAdd(true);
+      store.changeTaskSuccessOrNotPopup(response.data.code);
+      store.changeTaskAdd();
       store.isCreateFormOpen = false;
     } catch (error) {
       console.log((error as any).message);
@@ -62,9 +62,9 @@ export class TaskStore {
   @observable
   isTaskAdd: boolean = false;
   @action
-  changeTaskAdd = (isOpen: boolean): void => {
+  changeTaskAdd = (): void => {
     // Silinecek
-    this.isTaskAdd = isOpen;
+    this.isTaskAdd = true;
     setTimeout(function () {
       store.isTaskAdd = false;
     }, this.intervalTime);
@@ -81,7 +81,7 @@ export class TaskStore {
       this.selectedTask?.title.trim() === "" ||
       this.selectedTask?.description.trim() === ""
     ) {
-      this.changeFormModalIsEmptyVisibility(true);
+      this.changeFormModalIsEmptyVisibility(false);
       store.hideLoading();
       return;
     }
@@ -97,8 +97,8 @@ export class TaskStore {
       );
       store.isUpdateFormOpen = false;
       store.initializesMyTasks();
-      store.changeTaskSuccessOrNotPopup(true, response.data.code);
-      store.changeIsTaskUpdated(true);
+      store.changeTaskSuccessOrNotPopup(response.data.code);
+      store.changeIsTaskUpdated();
       store.isTaskEditedID = store.selectedTask!.id;
     } catch (error) {
       console.log((error as any).message);
@@ -111,8 +111,8 @@ export class TaskStore {
   @observable
   isTaskUpdated: boolean = false;
   @action
-  changeIsTaskUpdated = (isOpen: boolean): void => {
-    this.isTaskUpdated = isOpen;
+  changeIsTaskUpdated = (): void => {
+    this.isTaskUpdated = true;
     setTimeout(function () {
       store.isTaskUpdated = false;
     }, this.intervalTime);
@@ -133,7 +133,7 @@ export class TaskStore {
     try {
       const response = await axios.delete(`/task/${this.selectedTask!.id}`);
       store.initializesMyTasks();
-      store.changeTaskSuccessOrNotPopup(true, response.data.code);
+      store.changeTaskSuccessOrNotPopup(response.data.code);
     } catch (error) {
       console.log((error as any).message);
     } finally {
@@ -303,14 +303,14 @@ export class TaskStore {
   isTaskSuccessOrNotPopup: boolean = false;
   @observable
   ModalActionTypeName: string = "";
-  intervalTime: number = 2000;
+  intervalTime: number = 0;
   @action
-  changeTaskSuccessOrNotPopup = (isOpen: boolean, isType: string): void => {
-    this.isTaskSuccessOrNotPopup = isOpen;
+  changeTaskSuccessOrNotPopup = (isType: string): void => {
+    this.isTaskSuccessOrNotPopup = true;
     this.ModalActionTypeName = BringAsString.getTaskActionTypes(isType);
     setTimeout(function () {
       store.isTaskSuccessOrNotPopup = false;
-    }, this.intervalTime);
+    }, this.intervalTime += 2000);
   };
 
   /* Loading Effect is Show or Not */

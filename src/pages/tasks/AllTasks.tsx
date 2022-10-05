@@ -1,27 +1,23 @@
 import * as React from 'react';
 import { observer } from 'mobx-react-lite';
-import { Alert, Button, Loader, Table, tableHeaderCellBehavior, ZoomInIcon } from '@fluentui/react-northstar';
+import { Alert, Button, Loader, Status, Table, tableHeaderCellBehavior, ZoomInIcon } from '@fluentui/react-northstar';
 import { store } from './stores/TaskStore';
 import TaskDetailDialog from '../../components/TaskDetailDialog';
 import TaskCreateDialog from '../../components/TaskCreateDialog';
 import { BringAsString } from '../../services/services';
-import CreateButton from '../../components/CreateButton';
+import TaskFormEmptyDialog from '../../components/TaskFormIsEmptyDialog';
 
 interface IAllTasksProps { }
 const AllTasks: React.FC<IAllTasksProps> = observer(() => {
   const { allTasks, isLoading } = store;
   const { getStatusAsString, getDepartmentAsString } = BringAsString;
-  React.useMemo(() => {
+  React.useEffect(() => {
     store.initializesAllTasks()
   }, [])
 
   if (isLoading) return <div><Loader size="largest" label="Loading datas" labelPosition="below" /></div>
-
   return (
     <React.Fragment>
-
-      <CreateButton />
-
       {
         allTasks.length ? (
           <>
@@ -41,7 +37,40 @@ const AllTasks: React.FC<IAllTasksProps> = observer(() => {
                     <Table.Cell content={task.title} />
                     <Table.Cell content={task.user.name} />
                     <Table.Cell content={getDepartmentAsString(task.assignedDepartment)} />
-                    <Table.Cell content={getStatusAsString(task.status)} />
+                    {
+                      getStatusAsString(task.status) === "Pending" ? (
+                        <>
+                          <Table.Cell content={
+                            <div>
+                              <Status state={"warning"} title="warning" /> <code>{getStatusAsString(task.status)}</code>
+                            </div>
+                          } />
+                        </>
+                      ) : ""
+                    }
+                    {
+                      getStatusAsString(task.status) === "Completed" ? (
+                        <>
+                          <Table.Cell content={
+                            <div>
+                              <Status state={"success"} title="success" /> <code>{getStatusAsString(task.status)}</code>
+                            </div>
+                          } />
+                        </>
+                      ) : ""
+                    }
+                    {
+                      getStatusAsString(task.status) === "Rejected" ? (
+                        <>
+                          <Table.Cell content={
+                            <div>
+                              <Status state={"error"} title="error" /> <code>{getStatusAsString(task.status)}</code>
+                            </div>
+                          } />
+                        </>
+                      ) : ""
+                    }
+
                     <Table.Cell content={<Button content="" icon={<ZoomInIcon />} iconPosition="after" onClick={() => {
                       store.setSelectedTask(task)
                       store.changeDetailPopupVisibility(true)
@@ -60,6 +89,7 @@ const AllTasks: React.FC<IAllTasksProps> = observer(() => {
           </>
         )
       }
+      <TaskFormEmptyDialog />
       <TaskCreateDialog taskStore={store} />
       <TaskDetailDialog taskStore={store} />
     </React.Fragment>
