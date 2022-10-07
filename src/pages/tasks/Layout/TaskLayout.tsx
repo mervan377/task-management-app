@@ -23,7 +23,7 @@ const TasksLayout: React.FC<ITaskLayoutFormProps> = observer(() => {
                     <Outlet />
                 </div>
             </div>
-            <Footer />
+            {/* <Footer /> */}
         </React.Fragment>
     )
 })

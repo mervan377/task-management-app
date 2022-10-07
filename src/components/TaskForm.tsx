@@ -1,8 +1,9 @@
 import React from 'react'
-import { Flex, Form, Input, FormField, FormLabel, FormTextArea, FormDropdown, Divider } from '@fluentui/react-northstar';
+import { Flex, Form, FormField, FormLabel, FormTextArea, FormDropdown, Divider, FormInput, ErrorIcon } from '@fluentui/react-northstar';
 import { observer } from 'mobx-react';
 import { ITaskModel } from '../models/tasks/TaskModel';
 import { BringAsString } from '../services/services';
+import { store } from '../pages/tasks/stores/TaskStore';
 
 interface ITaskFormProps {
     selectedTask?: ITaskModel,
@@ -15,8 +16,12 @@ const departmentItems = [
     'Advertsement Department'
 ]
 
+
+
 const TaskDetailForm: React.FC<ITaskFormProps> = observer(({ selectedTask, isEditableForm }) => {
     const { getDepartmentAsString } = BringAsString;
+
+    const { createTaskErrorMessage } = store
 
     return (
         <Flex gap="gap.small">
@@ -36,12 +41,14 @@ const TaskDetailForm: React.FC<ITaskFormProps> = observer(({ selectedTask, isEdi
                                 </>
                             ) : (
                                 <>
-                                    <Input name="first-name" fluid aria-labelledby="first-name-label message-id" id="title" disabled={!isEditableForm}
+                                    <FormInput name="title" id="title" fluid aria-labelledby="title title" disabled={!isEditableForm}
                                         value={selectedTask!.title}
                                         onChange={(e) => {
                                             const value = (e.target as any).value;
                                             selectedTask!.title = value
                                         }}
+                                        errorMessage={createTaskErrorMessage}
+                                        errorIndicator={<ErrorIcon />}
                                     />
                                 </>
                             )
@@ -59,11 +66,12 @@ const TaskDetailForm: React.FC<ITaskFormProps> = observer(({ selectedTask, isEdi
                                 </>
                             ) : (
                                 <>
-                                    <FormTextArea name="desc" id="desc" fluid resize='both' disabled={!isEditableForm} value={selectedTask!.description}
+                                    <FormTextArea name="description" id="description" fluid resize='both' disabled={!isEditableForm} value={selectedTask!.description}
                                         onChange={(e) => {
                                             const value = (e.target as any).value;
                                             selectedTask!.description = value
                                         }}
+                                        errorMessage={createTaskErrorMessage} 
                                     />
                                 </>
                             )
@@ -80,7 +88,7 @@ const TaskDetailForm: React.FC<ITaskFormProps> = observer(({ selectedTask, isEdi
                                 </>
                             ) : (
                                 <>
-                                    <FormDropdown placeholder="Select assisgment department" disabled={!isEditableForm} fluid
+                                    <FormDropdown placeholder="Select assignment department" disabled={!isEditableForm} fluid
                                         items={departmentItems}
                                         checkable
                                         value={getDepartmentAsString(selectedTask!.assignedDepartment)}

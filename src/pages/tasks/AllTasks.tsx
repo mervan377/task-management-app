@@ -9,11 +9,12 @@ import TaskFormEmptyDialog from '../../components/TaskFormIsEmptyDialog';
 
 interface IAllTasksProps { }
 const AllTasks: React.FC<IAllTasksProps> = observer(() => {
-  const { allTasks, isLoading } = store;
+  const { allTasks, isLoading, initializesAllTasks } = store;
   const { getStatusAsString, getDepartmentAsString } = BringAsString;
   React.useEffect(() => {
-    store.initializesAllTasks()
+    initializesAllTasks()
   }, [])
+
 
   if (isLoading) return <div><Loader size="largest" label="Loading datas" labelPosition="below" /></div>
   return (
@@ -59,6 +60,7 @@ const AllTasks: React.FC<IAllTasksProps> = observer(() => {
                         </>
                       ) : ""
                     }
+
                     {
                       getStatusAsString(task.status) === "Rejected" ? (
                         <>
@@ -89,6 +91,7 @@ const AllTasks: React.FC<IAllTasksProps> = observer(() => {
           </>
         )
       }
+
       <TaskFormEmptyDialog />
       <TaskCreateDialog taskStore={store} />
       <TaskDetailDialog taskStore={store} />

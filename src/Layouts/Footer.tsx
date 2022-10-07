@@ -1,13 +1,21 @@
 import { observer } from 'mobx-react-lite'
 import React from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { TaskUrls } from '../models/tasks/TaskModel'
 import { BringAsString } from '../services/services'
 
 interface IFooterProps { }
 const Footer: React.FC<IFooterProps> = observer(() => {
     const navigate = useNavigate()
+    const location = useLocation()
     const { getURLAsString } = BringAsString
+
+    // navigate(location?.state?.return_url || '/', {
+    //     replace: true,
+    //     state: {
+    //         name: "mervan"
+    //     }
+    // })
     return (
         <React.Fragment>
 

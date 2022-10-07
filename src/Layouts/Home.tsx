@@ -14,7 +14,7 @@ const Home: React.FC<IHomePageProps> = observer(() => {
   const { allTasks, myTasks, pendingTasks } = store
   const { getURLAsString } = BringAsString
 
-  React.useMemo(() => {
+  React.useEffect(() => {
     store.initalizesTaskList();
   }, [])
 

@@ -10,44 +10,57 @@ import {
 } from "../../../models/request_response/tasks/CreateTask";
 import axios from "axios";
 import { BringAsString } from "../../../services/services";
+import { createTaskSchema } from "../../../validations/index";
+import * as yup from "yup";
+import { setLocale } from "yup";
 
 export class TaskStore {
   constructor() {
     makeObservable(this);
   }
 
+  @observable
+  isCreateValid: boolean = false;
+  @observable
+  createTaskErrorMessage: string[] = [""];
+
   /* Add Task to List */
   @action
   createTask = async (): Promise<void> => {
     this.showLoading();
-
-    if (
-      this.selectedTask?.title.trim() === "" ||
-      this.selectedTask?.description.trim() === ""
-    ) {
-      this.changeFormModalIsEmptyVisibility(false);
-      store.hideLoading();
-      return;
-    }
-
     const requestPayload: ITaskCreateRequestModel = {
       title: this.selectedTask!.title,
       description: this.selectedTask!.description,
       assignedDepartment: this.selectedTask!.assignedDepartment,
     };
 
+    createTaskSchema.isValid(requestPayload);
+
+    createTaskSchema
+      .validate(requestPayload, {abortEarly: false})
+      .then((responseData) => {
+        console.log(responseData);
+      })
+      .catch((err) => {
+        console.log(err.errors);
+        this.createTaskErrorMessage = err.errors;
+      });
+
     try {
-      const response = await axios.post("/task", requestPayload);
-      console.log(response);
-      store.initalizesTaskList();
+      const response = await axios.post("/task", createTaskSchema.validate(requestPayload));
       store.changeTaskSuccessOrNotPopup(response.data.code);
       store.changeTaskAdd();
+      this.initializesMyTasks();
+      this.initializesAllTasks();
       store.isCreateFormOpen = false;
+      store.isCreateValid = false;
     } catch (error) {
-      console.log((error as any).message);
-    } finally {
-      store.hideLoading();
+      // console.log((error as any).message);
+      createTaskSchema.validate(requestPayload).catch(function (err) {
+        console.log(...err.errors);
+      });
     }
+    store.hideLoading();
   };
 
   /*  Create Form Open  */
@@ -71,12 +84,10 @@ export class TaskStore {
   };
 
   @observable isTaskEditedID: number | undefined = 0;
-
   /* Update Task From List */
   @action
   updateTask = async (): Promise<void> => {
     this.showLoading();
-
     if (
       this.selectedTask?.title.trim() === "" ||
       this.selectedTask?.description.trim() === ""
@@ -89,15 +100,14 @@ export class TaskStore {
       title: this.selectedTask!.title,
       description: this.selectedTask!.description,
     };
-
     try {
       const response = await axios.put(
         `/task/${this.selectedTask!.id}`,
         requestPayload
       );
       store.isUpdateFormOpen = false;
-      store.initializesMyTasks();
       store.changeTaskSuccessOrNotPopup(response.data.code);
+      store.initializesMyTasks();
       store.changeIsTaskUpdated();
       store.isTaskEditedID = store.selectedTask!.id;
     } catch (error) {
@@ -310,7 +320,7 @@ export class TaskStore {
     this.ModalActionTypeName = BringAsString.getTaskActionTypes(isType);
     setTimeout(function () {
       store.isTaskSuccessOrNotPopup = false;
-    }, this.intervalTime += 2000);
+    }, (this.intervalTime = 2000));
   };
 
   /* Loading Effect is Show or Not */
@@ -324,7 +334,6 @@ export class TaskStore {
   hideLoading = (): void => {
     this.isLoading = false;
   };
- 
 }
 
 export const store = new TaskStore();

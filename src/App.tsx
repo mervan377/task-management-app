@@ -7,8 +7,6 @@ import Home from './Layouts/Home';
 import MyTasks from './pages/tasks/MyTasks';
 import PendingTasks from './pages/tasks/PendingTasks';
 import Deneme from './pages/tasks/Deneme';
-
-
 import Login from './pages/login/Login';
 import NotFound from './Layouts/NotFound';
 import LoginLayout from './pages/login/Layout/LoginLayout';
@@ -29,9 +27,7 @@ axios.defaults.baseURL = "http://localhost:5000/api"
 
 interface IAppProps { }
 const App: React.FC<IAppProps> = observer(() => {
-
   const { getURLAsString } = BringAsString
-
   return currentUser.length ? (
     <BrowserRouter>
       <Routes>
@@ -58,5 +54,4 @@ const App: React.FC<IAppProps> = observer(() => {
     </>
   )
 })
-
 export { App }

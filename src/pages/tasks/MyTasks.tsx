@@ -8,7 +8,7 @@ import { BringAsString } from '../../services/services';
 import { observer } from 'mobx-react-lite';
 import { ITaskModel } from '../../models/tasks/TaskModel';
 import { store } from './stores/TaskStore';
-import TaskCreateDialog from '../../components/TaskCreateDialog'; 
+import TaskCreateDialog from '../../components/TaskCreateDialog';
 import TaskFormEmptyDialog from '../../components/TaskFormIsEmptyDialog';
 
 interface IMyTasksProps {
@@ -17,13 +17,14 @@ interface IMyTasksProps {
 const MyTasks: React.FC<IMyTasksProps> = observer(() => {
   const { myTasks, isLoading } = store;
   const { getStatusAsString, getDepartmentAsString } = BringAsString
+
   React.useEffect(() => {
     store.initializesMyTasks();
   }, [])
   if (isLoading) return <div><Loader size="largest" label="Loading datas" labelPosition="below" /></div>
   return (
-    <React.Fragment> 
-     
+    <React.Fragment>
+
       {
         myTasks.length ? (
           <>
