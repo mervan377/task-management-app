@@ -19,7 +19,6 @@ const TaskFormEmptyDialog: React.FC<ILogoutWarningFormProps> = observer(() => {
             header="Can not be empty!"
         />
     )
-
 });
 
 

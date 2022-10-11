@@ -1,13 +1,14 @@
 import * as React from 'react';
 import { Dialog } from '@fluentui/react-northstar';
 import TaskForm from './TaskForm';
-import { TaskStore } from '../pages/tasks/stores/TaskStore';
+import { store, TaskStore } from '../pages/tasks/stores/TaskStore';
 import { observer } from 'mobx-react-lite';
+import { Formik } from 'formik';
 interface ICreateTaskProps {
     taskStore: TaskStore
 }
 const TaskCreateDialog: React.FC<ICreateTaskProps> = observer(({ taskStore }) => {
-    const { selectedTask, changeCreatePopupVisibility, createTask } = taskStore;
+    const { selectedTask, changeCreatePopupVisibility, createFormikHandle, createTask } = taskStore;
     return (
         <Dialog
             open={taskStore.isCreateFormOpen}
@@ -17,7 +18,8 @@ const TaskCreateDialog: React.FC<ICreateTaskProps> = observer(({ taskStore }) =>
             }}
             confirmButton="Create"
             onConfirm={() => {
-                createTask();
+                createFormikHandle()
+                createTask()
             }}
             content={
                 <TaskForm selectedTask={selectedTask!} isEditableForm={true} />

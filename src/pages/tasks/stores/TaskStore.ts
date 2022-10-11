@@ -10,14 +10,16 @@ import {
 } from "../../../models/request_response/tasks/CreateTask";
 import axios from "axios";
 import { BringAsString } from "../../../services/services";
-import { createTaskSchema } from "../../../validations/index";
 import * as yup from "yup";
-import { setLocale } from "yup";
+import { useFormik } from "formik";
 
 export class TaskStore {
   constructor() {
     makeObservable(this);
   }
+
+  @observable
+  createFormikHandle: any;
 
   @observable
   isCreateValid: boolean = false;
@@ -34,20 +36,8 @@ export class TaskStore {
       assignedDepartment: this.selectedTask!.assignedDepartment,
     };
 
-    createTaskSchema.isValid(requestPayload);
-
-    createTaskSchema
-      .validate(requestPayload, {abortEarly: false})
-      .then((responseData) => {
-        console.log(responseData);
-      })
-      .catch((err) => {
-        console.log(err.errors);
-        this.createTaskErrorMessage = err.errors;
-      });
-
     try {
-      const response = await axios.post("/task", createTaskSchema.validate(requestPayload));
+      const response = await axios.post("/task", requestPayload);
       store.changeTaskSuccessOrNotPopup(response.data.code);
       store.changeTaskAdd();
       this.initializesMyTasks();
@@ -55,10 +45,7 @@ export class TaskStore {
       store.isCreateFormOpen = false;
       store.isCreateValid = false;
     } catch (error) {
-      // console.log((error as any).message);
-      createTaskSchema.validate(requestPayload).catch(function (err) {
-        console.log(...err.errors);
-      });
+      console.log((error as any).message);
     }
     store.hideLoading();
   };
@@ -88,18 +75,12 @@ export class TaskStore {
   @action
   updateTask = async (): Promise<void> => {
     this.showLoading();
-    if (
-      this.selectedTask?.title.trim() === "" ||
-      this.selectedTask?.description.trim() === ""
-    ) {
-      this.changeFormModalIsEmptyVisibility(false);
-      store.hideLoading();
-      return;
-    }
+
     const requestPayload: ITaskUpdateRequestModel = {
       title: this.selectedTask!.title,
       description: this.selectedTask!.description,
     };
+
     try {
       const response = await axios.put(
         `/task/${this.selectedTask!.id}`,
