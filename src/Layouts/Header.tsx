@@ -9,6 +9,7 @@ import LogoutWarningDailog from '../components/LogoutWarningDailog'
 import React from 'react';
 import { TaskUrls } from '../models/tasks/TaskModel';
 import { BringAsString } from '../services/services';
+import { strings } from '../i18n';
 
 interface IHeaderProps { }
 
@@ -16,6 +17,7 @@ const Header: React.FC<IHeaderProps> = observer(() => {
   const navigate = useNavigate();
   const { changeLogoutWarningOpenModal } = authStore
   const { getURLAsString } = BringAsString
+  const { t } = strings
 
 
   let userName: string = ""
@@ -33,22 +35,22 @@ const Header: React.FC<IHeaderProps> = observer(() => {
             onClick: () => navigate(getURLAsString(TaskUrls.Home))
           },
           {
-            content: "Home",
+            content: t("menus.home"),
             key: 'Home',
             onClick: () => navigate(getURLAsString(TaskUrls.Home)),
           },
           {
-            content: 'All Tasks',
+            content: t("menus.allTasks"),
             key: 'AllTasks',
             onClick: () => navigate(getURLAsString(TaskUrls.AllTasks))
           },
           {
-            content: "My Tasks",
+            content: t("menus.myTasks"),
             key: 'MyTasks',
             onClick: () => navigate(getURLAsString(TaskUrls.MyTasks))
           },
           {
-            content: "Pending Tasks",
+            content: t("menus.pendingTasks"),
             key: 'PendingTasks',
             onClick: () => navigate(getURLAsString(TaskUrls.PendingTasks))
           }
@@ -56,9 +58,10 @@ const Header: React.FC<IHeaderProps> = observer(() => {
       />
       <div style={{ position: "absolute", top: "1rem", right: "2rem" }}>
         <span className='welcome-user'>
-          Welcome {userName}
+          {t("ui.welcome")}, {userName}
         </span>
-        <Button content="Logout" onClick={() => {
+
+        <Button content={t("menus.logout")} onClick={() => {
           changeLogoutWarningOpenModal(true)
         }} icon={<LeaveIcon />} />
       </div>

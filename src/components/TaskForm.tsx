@@ -1,12 +1,12 @@
 import React from 'react'
-import { Flex, Form, FormField, FormLabel, FormTextArea, FormDropdown, Divider, FormInput, Button } from '@fluentui/react-northstar';
+import { Flex, Form, FormField, FormLabel, FormTextArea, FormDropdown, Divider, FormInput } from '@fluentui/react-northstar';
 import { observer } from 'mobx-react';
 import { ITaskModel } from '../models/tasks/TaskModel';
 import { BringAsString } from '../services/services';
 import { store } from '../pages/tasks/stores/TaskStore';
-import { Formik, useFormik } from 'formik';
+import { useFormik } from 'formik';
 import * as yup from 'yup';
-import { createTaskSchema } from '../validations';
+import { strings } from '../i18n';
 
 
 
@@ -20,28 +20,36 @@ const departmentItems = [
     'Advertsement Department'
 ]
 
+const { t } = strings
 
 const TaskDetailForm: React.FC<ITaskFormProps> = observer(({ selectedTask, isEditableForm }) => {
     const { getDepartmentAsString } = BringAsString;
 
     const validationSchema = yup.object({
-        title: yup.string().required(),
-        description: yup.string().required(),
+        title: yup.string().required("Title is can not be empty!"),
+        description: yup.string().required("Descriptin field must be filled!"),
     });
 
     const formik = useFormik({
         initialValues: {
-            title: '',
-            description: '',
+            title: selectedTask!.title,
+            description: selectedTask!.description,
         },
         validationSchema: validationSchema,
         onSubmit: (values) => {
             selectedTask!.title = values.title
             selectedTask!.description = values.description
-            // store.createTask()
+            if (store.isCreatedValid) {
+                store.createTask()
+            }
+            if (store.isUpdatedValid) {
+                store.updateTask()
+            }
         },
     });
-    store.createFormikHandle = formik.handleSubmit
+
+
+    store.storeformikHandle = formik.handleSubmit
     return (
         <Flex gap="gap.small">
             <Flex style={{ width: "100%" }}>
@@ -49,7 +57,7 @@ const TaskDetailForm: React.FC<ITaskFormProps> = observer(({ selectedTask, isEdi
                     <Divider />
                     <FormField >
                         <FormLabel className='detail-title'>
-                            Title
+                            {t("ui.title")}
                         </FormLabel>
                         {
                             !isEditableForm ? (
@@ -62,20 +70,20 @@ const TaskDetailForm: React.FC<ITaskFormProps> = observer(({ selectedTask, isEdi
                                         value={selectedTask!.title}
                                         onChange={(e) => {
                                             const value = (e.target as any).value;
-                                            selectedTask!.title = value
-                                            formik.values.title = value
+                                            selectedTask!.title = value;
+                                            formik.values.title = value;
+                                            formik.handleChange(e)
                                         }}
                                         error={!Boolean(formik.touched.title) || !Boolean(formik.errors.title)}
                                         errorMessage={Boolean(formik.touched.title) && formik.errors.title}
                                     />
-
                                 </>
                             )
                         }
                     </FormField>
                     <FormField>
                         <FormLabel className='detail-title'>
-                            Description
+                            {t("ui.description")}
                         </FormLabel>
                         {
                             !isEditableForm ? (
@@ -90,6 +98,7 @@ const TaskDetailForm: React.FC<ITaskFormProps> = observer(({ selectedTask, isEdi
                                             const value = (e.target as any).value;
                                             selectedTask!.description = value
                                             formik.values.description = value
+                                            formik.handleChange(e)
                                         }}
                                         error={Boolean(formik.touched.description) || Boolean(formik.errors.description)}
                                         errorMessage={Boolean(formik.touched.description) && formik.errors.description}
@@ -100,7 +109,7 @@ const TaskDetailForm: React.FC<ITaskFormProps> = observer(({ selectedTask, isEdi
                     </FormField>
                     <FormField>
                         <FormLabel htmlFor="title" id="first-name-label" className='detail-title'>
-                            Assisgment department
+                            {t("ui.assignedDepartment")}
                         </FormLabel>
                         {
                             !isEditableForm ? (

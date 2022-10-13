@@ -13,8 +13,8 @@ import LoginLayout from './pages/login/Layout/LoginLayout';
 import { TaskUrls } from './models/tasks/TaskModel';
 import { observer } from 'mobx-react-lite';
 import axios from 'axios';
-import { BringAsString } from './services/services';
-
+import { BringAsString } from './services';
+import "./i18n"
 
 let currentUser: string = ""
 if (localStorage.getItem('user') !== null) {
@@ -27,7 +27,9 @@ axios.defaults.baseURL = "http://localhost:5000/api"
 
 interface IAppProps { }
 const App: React.FC<IAppProps> = observer(() => {
+
   const { getURLAsString } = BringAsString
+
   return currentUser.length ? (
     <BrowserRouter>
       <Routes>
@@ -55,3 +57,4 @@ const App: React.FC<IAppProps> = observer(() => {
   )
 })
 export { App }
+

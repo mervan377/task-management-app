@@ -9,7 +9,8 @@ import { observer } from 'mobx-react-lite';
 import { ITaskModel } from '../../models/tasks/TaskModel';
 import { store } from './stores/TaskStore';
 import TaskCreateDialog from '../../components/TaskCreateDialog';
-import TaskFormEmptyDialog from '../../components/TaskFormIsEmptyDialog';
+import TaskFormEmptyDialog from '../../components/TaskFormIsEmptyDialog'; 
+import { strings } from '../../i18n';
 
 interface IMyTasksProps {
   selectedTask?: ITaskModel
@@ -18,9 +19,12 @@ const MyTasks: React.FC<IMyTasksProps> = observer(() => {
   const { myTasks, isLoading } = store;
   const { getStatusAsString, getDepartmentAsString } = BringAsString
 
+  const { t } = strings
+
   React.useEffect(() => {
     store.initializesMyTasks();
   }, [])
+
   if (isLoading) return <div><Loader size="largest" label="Loading datas" labelPosition="below" /></div>
   return (
     <React.Fragment>
@@ -30,11 +34,11 @@ const MyTasks: React.FC<IMyTasksProps> = observer(() => {
           <>
             <Table aria-label="table" >
               <Table.Row header className='table-header'>
-                <Table.Cell content="Title" accessibility={tableHeaderCellBehavior} />
-                <Table.Cell content="Created By" accessibility={tableHeaderCellBehavior} />
-                <Table.Cell content="Assigned Department" accessibility={tableHeaderCellBehavior} />
-                <Table.Cell content="Status" accessibility={tableHeaderCellBehavior} />
-                <Table.Cell content="Actions" accessibility={tableHeaderCellBehavior} />
+                <Table.Cell content={t("ui.title")} accessibility={tableHeaderCellBehavior} />
+                <Table.Cell content={t("ui.createdBy")} accessibility={tableHeaderCellBehavior} />
+                <Table.Cell content={t("ui.assignedDepartment")} accessibility={tableHeaderCellBehavior} />
+                <Table.Cell content={t("ui.statusTask")} accessibility={tableHeaderCellBehavior} />
+                <Table.Cell content={t("ui.actionsTask")} accessibility={tableHeaderCellBehavior} />
               </Table.Row>
               {myTasks.map((task, index) => {
                 return (

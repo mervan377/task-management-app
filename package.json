@@ -14,6 +14,7 @@
     "@types/react-dom": "^18.0.6",
     "formik": "^2.2.9",
     "framer-motion": "^7.3.5",
+    "i18n-js": "^4.1.1",
     "mobx": "^6.6.1",
     "mobx-react": "^7.5.2",
     "mobx-react-lite": "^3.4.0",

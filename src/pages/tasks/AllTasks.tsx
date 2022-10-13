@@ -6,6 +6,7 @@ import TaskDetailDialog from '../../components/TaskDetailDialog';
 import TaskCreateDialog from '../../components/TaskCreateDialog';
 import { BringAsString } from '../../services/services';
 import TaskFormEmptyDialog from '../../components/TaskFormIsEmptyDialog';
+import { strings } from '../../i18n';
 
 interface IAllTasksProps { }
 const AllTasks: React.FC<IAllTasksProps> = observer(() => {
@@ -14,6 +15,8 @@ const AllTasks: React.FC<IAllTasksProps> = observer(() => {
   React.useEffect(() => {
     initializesAllTasks()
   }, [])
+
+  const { t } = strings
 
 
   if (isLoading) return <div><Loader size="largest" label="Loading datas" labelPosition="below" /></div>
@@ -24,11 +27,11 @@ const AllTasks: React.FC<IAllTasksProps> = observer(() => {
           <>
             <Table aria-label="table" >
               <Table.Row header className='table-header'>
-                <Table.Cell content="Title" accessibility={tableHeaderCellBehavior} />
-                <Table.Cell content="Created By" accessibility={tableHeaderCellBehavior} />
-                <Table.Cell content="Assigned Department" accessibility={tableHeaderCellBehavior} />
-                <Table.Cell content="Status" accessibility={tableHeaderCellBehavior} />
-                <Table.Cell content="Actions" accessibility={tableHeaderCellBehavior} />
+                <Table.Cell content={t("ui.title")} accessibility={tableHeaderCellBehavior} />
+                <Table.Cell content={t("ui.createdBy")} accessibility={tableHeaderCellBehavior} />
+                <Table.Cell content={t("ui.assignedDepartment")} accessibility={tableHeaderCellBehavior} />
+                <Table.Cell content={t("ui.statusTask")} accessibility={tableHeaderCellBehavior} />
+                <Table.Cell content={t("ui.actionsTask")} accessibility={tableHeaderCellBehavior} />
               </Table.Row>
               {allTasks.map((task, index) => {
                 return (

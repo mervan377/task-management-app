@@ -10,8 +10,6 @@ import {
 } from "../../../models/request_response/tasks/CreateTask";
 import axios from "axios";
 import { BringAsString } from "../../../services/services";
-import * as yup from "yup";
-import { useFormik } from "formik";
 
 export class TaskStore {
   constructor() {
@@ -19,10 +17,16 @@ export class TaskStore {
   }
 
   @observable
-  createFormikHandle: any;
+  navigatorLanguage: string = "en";
+  @action
+  changeNavigatorLanguage = (setLanguage: string): void => {
+    this.navigatorLanguage = setLanguage;
+  };
 
   @observable
-  isCreateValid: boolean = false;
+  storeformikHandle: any;
+  @observable
+  isCreatedValid: boolean = false;
   @observable
   createTaskErrorMessage: string[] = [""];
 
@@ -43,11 +47,12 @@ export class TaskStore {
       this.initializesMyTasks();
       this.initializesAllTasks();
       store.isCreateFormOpen = false;
-      store.isCreateValid = false;
     } catch (error) {
       console.log((error as any).message);
+    } finally {
+      store.hideLoading();
+      this.isCreatedValid = false;
     }
-    store.hideLoading();
   };
 
   /*  Create Form Open  */
@@ -71,6 +76,8 @@ export class TaskStore {
   };
 
   @observable isTaskEditedID: number | undefined = 0;
+  @observable
+  isUpdatedValid: boolean = false;
   /* Update Task From List */
   @action
   updateTask = async (): Promise<void> => {
@@ -95,6 +102,7 @@ export class TaskStore {
       console.log((error as any).message);
     } finally {
       store.hideLoading();
+      this.isUpdatedValid = false;
     }
   };
 

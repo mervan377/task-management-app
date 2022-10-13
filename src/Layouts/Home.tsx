@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import { TaskUrls } from '../models/tasks/TaskModel'
 import { BringAsString } from '../services/services'
 import { store } from '../pages/tasks/stores/TaskStore'
+import { strings } from '../i18n'
 
 
 interface IHomePageProps { }
@@ -13,6 +14,7 @@ const Home: React.FC<IHomePageProps> = observer(() => {
 
   const { allTasks, myTasks, pendingTasks } = store
   const { getURLAsString } = BringAsString
+  const { t } = strings
 
   React.useEffect(() => {
     store.initalizesTaskList();
@@ -28,7 +30,7 @@ const Home: React.FC<IHomePageProps> = observer(() => {
                 <NotesIcon />
               </div>
               <div className="extra_info_text">
-                <p>All Tasks</p>
+                <p>{t("menus.allTasks")}</p>
                 <p>{allTasks.length}</p>
               </div>
             </div>
@@ -42,7 +44,7 @@ const Home: React.FC<IHomePageProps> = observer(() => {
                 <PersonIcon />
               </div>
               <div className="extra_info_text">
-                <p>My Tasks</p>
+                <p>{t("menus.myTasks")}</p>
                 <p>{myTasks.length}</p>
               </div>
             </div>
@@ -56,7 +58,7 @@ const Home: React.FC<IHomePageProps> = observer(() => {
                 <TaskListIcon />
               </div>
               <div className="extra_info_text">
-                <p> Pending Tasks</p>
+                <p> {(t("menus.pendingTasks"))} </p>
                 <p>{pendingTasks.length}</p>
               </div>
             </div>

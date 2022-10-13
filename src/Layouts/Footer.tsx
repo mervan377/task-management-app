@@ -1,21 +1,16 @@
 import { observer } from 'mobx-react-lite'
 import React from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
+import { strings } from '../i18n'
 import { TaskUrls } from '../models/tasks/TaskModel'
 import { BringAsString } from '../services/services'
 
 interface IFooterProps { }
 const Footer: React.FC<IFooterProps> = observer(() => {
     const navigate = useNavigate()
-    const location = useLocation()
     const { getURLAsString } = BringAsString
+    const { t } = strings
 
-    // navigate(location?.state?.return_url || '/', {
-    //     replace: true,
-    //     state: {
-    //         name: "mervan"
-    //     }
-    // })
     return (
         <React.Fragment>
 
@@ -24,34 +19,36 @@ const Footer: React.FC<IFooterProps> = observer(() => {
                 <div className="footer-container">
 
                     <div className="footer-logo">
-                        TASK MANAGEMENT APP
+                        {t("ui.projectName")}
                     </div>
 
                     <div className='about-project'>
-                        <div>Task Management App</div>
-                        <div>Manage your to do stuff and manage your time</div>
-                        <div>Created by Mervan Yalcin</div>
+                        <div>{t("ui.projectName")}</div>
+                        <div>{t("ui.projectAddvertisment")}</div>
+                        <div>Mervan Yalcin {t("ui.createdBy")} </div>
                     </div>
 
                     <div className="footer-menus">
                         <ul>
                             <li onClick={() => {
                                 navigate(getURLAsString(TaskUrls.Home))
-                            }}> Home</li>
+                            }}>
+                                {t("menus.home")}
+                            </li>
                             <li onClick={() => {
                                 navigate(getURLAsString(TaskUrls.AllTasks))
                             }}>
-                                All Tasks
+                                {t("menus.allTasks")}
                             </li>
                             <li onClick={() => {
                                 navigate(getURLAsString(TaskUrls.MyTasks))
                             }}>
-                                My Tasks
+                                {t("menus.myTasks")}
                             </li>
                             <li onClick={() => {
                                 navigate(getURLAsString(TaskUrls.PendingTasks))
                             }}>
-                                Pendings
+                                {t("menus.pendingTasks")}
                             </li>
                         </ul>
                     </div>

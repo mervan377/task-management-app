@@ -6,6 +6,7 @@ import TaskCreateDialog from '../../components/TaskCreateDialog';
 import { BringAsString } from '../../services/services';
 import { observer } from 'mobx-react-lite';
 import { store } from './stores/TaskStore';
+import { strings } from "../../i18n"
 
 
 interface IPendingTasksProps { }
@@ -13,6 +14,9 @@ interface IPendingTasksProps { }
 const PendingTasks: React.FC<IPendingTasksProps> = observer(() => {
   const { pendingTasks, isLoading, setSelectedTask, changePendingPopupVisibility: changePendingDetailPopupVisibility } = store;
   const { getDepartmentAsString, getStatusAsString } = BringAsString
+
+  const { t } = strings;
+
   React.useEffect(() => {
     store.initializesPendingTasks();
   }, [])
@@ -22,18 +26,16 @@ const PendingTasks: React.FC<IPendingTasksProps> = observer(() => {
 
   return (
     <React.Fragment>
-
-
       {
         pendingTasks.length ? (
           <>
             <Table aria-label="table">
               <Table.Row header className='table-header'>
-                <Table.Cell content="Title" accessibility={tableHeaderCellBehavior} />
-                <Table.Cell content="Created By" accessibility={tableHeaderCellBehavior} />
-                <Table.Cell content="Assigned Department" accessibility={tableHeaderCellBehavior} />
-                <Table.Cell content="Status" accessibility={tableHeaderCellBehavior} />
-                <Table.Cell content="Actions" accessibility={tableHeaderCellBehavior} />
+                <Table.Cell content={t("ui.title")} accessibility={tableHeaderCellBehavior} />
+                <Table.Cell content={t("ui.createdBy")} accessibility={tableHeaderCellBehavior} />
+                <Table.Cell content={t("ui.assignedDepartment")} accessibility={tableHeaderCellBehavior} />
+                <Table.Cell content={t("ui.statusTask")}accessibility={tableHeaderCellBehavior} />
+                <Table.Cell content={t("ui.actionsTask")} accessibility={tableHeaderCellBehavior} />
               </Table.Row>
               {pendingTasks.map((task, index) => {
                 return (

@@ -1,12 +1,13 @@
 import { Form, FormButton, FormInput, Input } from '@fluentui/react-northstar';
 import { observer } from 'mobx-react-lite';
 import React from 'react'
+import { strings } from '../../i18n';
 import { authStore } from './stores/authStore';
 
 interface ILoginFormProps { }
 
 const Login: React.FC<ILoginFormProps> = observer(() => {
-
+  const { t } = strings
   return (
     <div>
       <div className="login-wrapper">
@@ -17,7 +18,7 @@ const Login: React.FC<ILoginFormProps> = observer(() => {
           </div>
           {/* <p>Task Management System for your daily stuff</p> */}
 
-          <h2>User Login </h2>
+          <h2>{t("ui.userLoginTitle")}</h2>
           <Form
             onSubmit={() => {
               authStore.login()
@@ -27,8 +28,8 @@ const Login: React.FC<ILoginFormProps> = observer(() => {
               name="email"
               id="email"
               type='email'
-              label="Email*"
-              placeholder='write your email'
+              label={t("ui.email")}
+              placeholder={t("ui.emailPlaceholder")}
               value={authStore.loginModel.email}
               fluid
               onChange={(e) => {
@@ -41,9 +42,9 @@ const Login: React.FC<ILoginFormProps> = observer(() => {
               name="password"
               id="password"
               type="password"
-              label="Password*"
+              label={t("ui.password")}
               style={{ color: "#bbb" }}
-              placeholder='write your password'
+              placeholder={t("ui.passwordPlaceholder")}
               fluid
               value={authStore.loginModel.password}
               onChange={(e) => {
@@ -51,7 +52,7 @@ const Login: React.FC<ILoginFormProps> = observer(() => {
                 authStore.loginModel.password = value;
               }}
             />
-            <FormButton content="Login" key="login" style={{ float: "right" }} primary />
+            <FormButton content={t("menus.login")} key="login" style={{ float: "right" }} primary />
           </Form>
         </div>
       </div>

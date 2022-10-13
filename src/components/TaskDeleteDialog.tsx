@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Dialog } from '@fluentui/react-northstar';
 import { observer } from 'mobx-react-lite';
 import { TaskStore } from '../pages/tasks/stores/TaskStore';
+import { strings } from '../i18n';
 
 interface ITaskDeleteFormProps {
     taskStore: TaskStore
@@ -10,23 +11,23 @@ interface ITaskDeleteFormProps {
 const TaskDeleteDialog: React.FC<ITaskDeleteFormProps> = observer(({ taskStore }) => {
 
     const { changeDeletePopupVisibility, deleteTask } = taskStore;
+    const { t } = strings;
 
     return (
         <>
             <Dialog
                 open={taskStore.isDeleteFormOpen}
-                cancelButton="Cancel"
+                cancelButton={t("dialogTexts.close")}
                 onCancel={() => {
                     changeDeletePopupVisibility(false)
                 }}
-                confirmButton="Delete"
+                confirmButton={t("dialogTexts.delete")}
                 onConfirm={() => {
                     deleteTask()
                 }}
-                content={
-                    `Do you want to delete the task that has the title ${taskStore.selectedTask?.title} ?`
+                content={`${taskStore.selectedTask?.title}  ${t("dialogTexts.deleteTaskDesc")} `
                 }
-                header="Delete this task?"
+                header={t("dialogTexts.deleteTaskTitle")}
             />
         </>
     )

@@ -1,33 +1,34 @@
 import * as React from 'react';
 import { Dialog } from '@fluentui/react-northstar';
 import TaskForm from './TaskForm';
-import { TaskStore } from '../pages/tasks/stores/TaskStore';
+import { store, TaskStore } from '../pages/tasks/stores/TaskStore';
 import { observer } from 'mobx-react-lite';
+import { strings } from '../i18n';
 
 
 interface ITaskUpdateFormProps {
   taskStore: TaskStore
 }
 const TaskUpdateDialog: React.FC<ITaskUpdateFormProps> = observer(({ taskStore }) => {
-  const { selectedTask, changeUpdatePopupVisibility, updateTask } = taskStore;
+  const { selectedTask, changeUpdatePopupVisibility, storeformikHandle } = taskStore;
+  const { t } = strings
   return (
-    <>
-      <Dialog
-        open={taskStore.isUpdateFormOpen}
-        cancelButton="Cancel"
-        onCancel={() => {
-          changeUpdatePopupVisibility(false)
-        }}
-        confirmButton="Update"
-        onConfirm={() => {
-          updateTask()
-        }}
-        content={
-          <TaskForm selectedTask={selectedTask!} isEditableForm={true} />
-        }
-        header="Update Task"
-      />
-    </>
+    <Dialog
+      open={taskStore.isUpdateFormOpen}
+      cancelButton={t("dialogTexts.close")}
+      onCancel={() => {
+        changeUpdatePopupVisibility(false)
+      }}
+      confirmButton={t("dialogTexts.update")}
+      onConfirm={() => {
+        storeformikHandle()
+        store.isUpdatedValid = true
+      }}
+      content={
+        <TaskForm selectedTask={selectedTask!} isEditableForm={true} />
+      }
+      header={t("dialogTexts.updateTaskTitle")}
+    />
   )
 });
 

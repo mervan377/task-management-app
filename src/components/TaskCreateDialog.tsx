@@ -3,28 +3,29 @@ import { Dialog } from '@fluentui/react-northstar';
 import TaskForm from './TaskForm';
 import { store, TaskStore } from '../pages/tasks/stores/TaskStore';
 import { observer } from 'mobx-react-lite';
-import { Formik } from 'formik';
+import { strings } from '../i18n';
 interface ICreateTaskProps {
     taskStore: TaskStore
 }
 const TaskCreateDialog: React.FC<ICreateTaskProps> = observer(({ taskStore }) => {
-    const { selectedTask, changeCreatePopupVisibility, createFormikHandle, createTask } = taskStore;
+    const { selectedTask, changeCreatePopupVisibility, storeformikHandle } = taskStore;
+    const { t } = strings;
     return (
         <Dialog
             open={taskStore.isCreateFormOpen}
-            cancelButton="Cancel"
+            cancelButton={t("dialogTexts.close")}
             onCancel={() => {
                 changeCreatePopupVisibility(false)
             }}
-            confirmButton="Create"
+            confirmButton={t("dialogTexts.create")}
             onConfirm={() => {
-                createFormikHandle()
-                createTask()
+                storeformikHandle()
+                store.isCreatedValid = true
             }}
             content={
                 <TaskForm selectedTask={selectedTask!} isEditableForm={true} />
             }
-            header="Create New Task"
+            header={t("dialogTexts.createTaskTitle")}
         />
     )
 });
