@@ -46,6 +46,7 @@ export const entries = {
     delete: "Delete",
     taskDetailTitle: "Task Detail",
     updateTaskTitle: "Update Task",
+    createTaskTitle: "Create New Task",
     deleteTaskTitle: "Delete this task?",
     deleteTaskDesc: "Do you want to delete the task that has the title ?",
     pendingTaskTitle: "Task Confirmation",

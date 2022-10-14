@@ -21,8 +21,8 @@ const TaskUpdateDialog: React.FC<ITaskUpdateFormProps> = observer(({ taskStore }
       }}
       confirmButton={t("dialogTexts.update")}
       onConfirm={() => {
-        storeformikHandle()
         store.isUpdatedValid = true
+        storeformikHandle()
       }}
       content={
         <TaskForm selectedTask={selectedTask!} isEditableForm={true} />

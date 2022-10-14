@@ -49,6 +49,7 @@ const App: React.FC<IAppProps> = observer(() => {
         <Routes>
           <Route element={<LoginLayout />} >
             <Route path='/Login' element={<Login />} />
+            <Route path={"/Deneme"} element={<Deneme />} />
             <Route path='*' element={<NotFound />} />
           </Route>
         </Routes>

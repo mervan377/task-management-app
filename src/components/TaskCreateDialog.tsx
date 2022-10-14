@@ -19,8 +19,8 @@ const TaskCreateDialog: React.FC<ICreateTaskProps> = observer(({ taskStore }) =>
             }}
             confirmButton={t("dialogTexts.create")}
             onConfirm={() => {
-                storeformikHandle()
                 store.isCreatedValid = true
+                storeformikHandle()
             }}
             content={
                 <TaskForm selectedTask={selectedTask!} isEditableForm={true} />

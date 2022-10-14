@@ -2,11 +2,10 @@ import axios from "axios";
 import { action, makeObservable, observable } from "mobx";
 import { Departments, ILoginModel } from "../../../models/login/LoginModel";
 
-
 export class AuthStore {
   constructor() {
     makeObservable(this);
-    
+
     this.loginModel = {
       email: "",
       password: "",

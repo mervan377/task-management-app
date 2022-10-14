@@ -1,4 +1,4 @@
-import yup from "./Validations";
+import * as yup from "yup";
 
 /* Task Create Schema */
 export const createTaskSchema = yup.object().shape({

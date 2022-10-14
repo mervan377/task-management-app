@@ -6,4 +6,3 @@ yup.setLocale({
   // },
 });
 
-export default yup

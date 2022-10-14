@@ -39,6 +39,7 @@ const TaskDetailForm: React.FC<ITaskFormProps> = observer(({ selectedTask, isEdi
         onSubmit: (values) => {
             selectedTask!.title = values.title
             selectedTask!.description = values.description
+            
             if (store.isCreatedValid) {
                 store.createTask()
             }
