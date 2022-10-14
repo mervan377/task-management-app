@@ -28,99 +28,40 @@ const MyTasks: React.FC<IMyTasksProps> = observer(() => {
   if (isLoading) return <div><Loader size="largest" label="Loading datas" labelPosition="below" /></div>
   return (
     <React.Fragment>
-
-      {
-        myTasks.length ? (
-          <>
-            <Table aria-label="table" >
-              <Table.Row header className='table-header'>
-                <Table.Cell content={t("ui.title")} accessibility={tableHeaderCellBehavior} />
-                <Table.Cell content={t("ui.createdBy")} accessibility={tableHeaderCellBehavior} />
-                <Table.Cell content={t("ui.assignedDepartment")} accessibility={tableHeaderCellBehavior} />
-                <Table.Cell content={t("ui.statusTask")} accessibility={tableHeaderCellBehavior} />
-                <Table.Cell content={t("ui.actionsTask")} accessibility={tableHeaderCellBehavior} />
-              </Table.Row>
-              {myTasks.map((task, index) => {
-                return (
-                  <Table.Row key={`${index}`} className={
-                    store.isTaskUpdated && store.isTaskEditedID === task.id ? "greenbackground" : "" || store.isTaskAdd ? "greenbackground-add" : ""
-                  }>
-                    <Table.Cell content={task.title} />
-                    <Table.Cell content={task.user.name} />
-                    <Table.Cell content={getDepartmentAsString(task.assignedDepartment)} />
-                    {
-                      getStatusAsString(task.status) === "Pending" ? (
-                        <>
-                          <Table.Cell content={
-                            <div>
-                              <Status state={"warning"} title="warning" /> <code>{getStatusAsString(task.status)}</code>
-                            </div>
-                          } />
-                        </>
-                      ) : ""
-                    }
-                    {
-                      getStatusAsString(task.status) === "Completed" ? (
-                        <>
-                          <Table.Cell content={
-                            <div>
-                              <Status state={"success"} title="success" /> <code>{getStatusAsString(task.status)}</code>
-                            </div>
-                          } />
-                        </>
-                      ) : ""
-                    }
-                    {
-                      getStatusAsString(task.status) === "Rejected" ? (
-                        <>
-                          <Table.Cell content={
-                            <div>
-                              <Status state={"error"} title="error" /> <code>{getStatusAsString(task.status)}</code>
-                            </div>
-                          } />
-                        </>
-                      ) : ""
-                    }
-                    <Table.Cell content={
-                      <>
-                        <Button content="" icon={<ZoomInIcon />} iconPosition="after" onClick={() => {
-                          store.setSelectedTask(task)
-                          store.changeDetailPopupVisibility(true)
-                        }} />
-                        {
-                          task.status === 0 ? (
-                            <>
-                              <Button content="" icon={<EditIcon />} iconPosition="after" onClick={() => {
-                                store.setSelectedTask(task)
-                                store.changeUpdatePopupVisibility(true)
-                              }} />
-                              <Button content="" icon={<TrashCanIcon />} iconPosition="after" onClick={() => {
-                                store.setSelectedTask(task)
-                                store.changeDeletePopupVisibility(true)
-                              }} />
-                            </>
-                          ) : (
-                            null
-                          )
-                        }
-                      </>
-                    } />
-                  </Table.Row>
-                )
-              })
-              }
-            </Table>
-          </>
-        ) : (
-          <>
-            <Alert variables={{ urgent: true }}>
-              <h1>No Task Found</h1>
-            </Alert>
-          </>
-        )
-      }
-      <TaskFormEmptyDialog />
-      <TaskCreateDialog taskStore={store} />
+      <Table aria-label="table" >
+        <Table.Row header className='table-header'>
+          <Table.Cell content="Title" accessibility={tableHeaderCellBehavior} />
+          <Table.Cell content="Created By" accessibility={tableHeaderCellBehavior} />
+          <Table.Cell content="Assigned Department" accessibility={tableHeaderCellBehavior} />
+          <Table.Cell content="Status" accessibility={tableHeaderCellBehavior} />
+          <Table.Cell content="See Detail" accessibility={tableHeaderCellBehavior} />
+          <Table.Cell content="Update" accessibility={tableHeaderCellBehavior} />
+          <Table.Cell content="Delete" accessibility={tableHeaderCellBehavior} />
+        </Table.Row>
+        {myTasks.map((task, index) => {
+          return (
+            <Table.Row>
+              <Table.Cell content={task.title} />
+              <Table.Cell content={task.user.name} />
+              <Table.Cell content={getDepartmentAsString(task.assignedDepartment)} />
+              <Table.Cell content={getStatusAsString(task.status)} />
+              <Table.Cell content={<Button content="Detail Task" icon={<ExpandIcon />} iconPosition="after" onClick={() => {
+                store.setSelectedTask(task)
+                store.changeDetailPopupVisibility(true) 
+              }} />} />
+              <Table.Cell content={<Button content="Update" icon={<SettingsIcon />} iconPosition="after" onClick={() => {
+                store.setSelectedTask(task)
+                store.changeUpdatePopupVisibility(true)
+              }} />} />
+              <Table.Cell content={<Button content="Delete Task" icon={<TrashCanIcon />} iconPosition="after" />} onClick={() => {
+                store.setSelectedTask(task)
+                store.changeDeletePopupVisibility(true)
+              }} />
+            </Table.Row>
+          )
+        })
+        }
+      </Table>
       <TaskDeleteDialog taskStore={store} />
       <TaskUpdateDialog taskStore={store} />
       <TaskDetailDialog taskStore={store} />
